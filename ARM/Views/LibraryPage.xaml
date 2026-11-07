@@ -1,0 +1,103 @@
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ARM.Views.LibraryPage"
+             BackgroundColor="{DynamicResource BgColor}">
+
+    <!-- ARMusic · Libreria (ARM 2.5): Playlist [Spotify] [Nuova] in griglia a 2 colonne, poi i brani scaricati -->
+    <ScrollView>
+        <VerticalStackLayout Padding="20,4,20,30" Spacing="22">
+
+            <VerticalStackLayout Spacing="12">
+                <Grid ColumnDefinitions="*, Auto, Auto" ColumnSpacing="8">
+                    <Label Grid.Column="0" Text="Playlist" TextColor="{DynamicResource TextColor}" FontSize="20" FontFamily="JakartaExtraBold" VerticalOptions="Center" />
+                    <!-- Importa da Spotify (bottone secondario) -->
+                    <Border Grid.Column="1" HeightRequest="40" Padding="12,0" StrokeShape="RoundRectangle 14" BackgroundColor="{DynamicResource SoftAccentColor}" StrokeThickness="0">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSpotifyClicked" />
+                        </Border.GestureRecognizers>
+                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                            <Path Data="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z" Fill="{DynamicResource AccentColor}" Aspect="Uniform" WidthRequest="18" HeightRequest="18" VerticalOptions="Center"/>
+                            <Label Text="Spotify" TextColor="{DynamicResource AccentColor}" FontFamily="JakartaExtraBold" FontSize="14" VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+                    <!-- Nuova playlist (bottone principale piccolo) -->
+                    <Border Grid.Column="2" HeightRequest="40" Padding="12,0" StrokeShape="RoundRectangle 14" BackgroundColor="{DynamicResource AccentColor}" StrokeThickness="0">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAddPlaylistClicked" />
+                        </Border.GestureRecognizers>
+                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                            <Path Data="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" Fill="{DynamicResource OnAccentColor}" Aspect="Uniform" WidthRequest="18" HeightRequest="18" VerticalOptions="Center"/>
+                            <Label Text="Nuova" TextColor="{DynamicResource OnAccentColor}" FontFamily="JakartaExtraBold" FontSize="14" VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+                </Grid>
+
+                <Label x:Name="NoPlaylistsLabel" Text="Ancora nessuna playlist: tocca «Nuova» o importane una da Spotify." FontSize="13" FontFamily="JakartaMedium" TextColor="{DynamicResource SubTextColor}" IsVisible="False"/>
+
+                <!-- Griglia a 2 colonne: card raggio 20 con copertina 120 -->
+                <CollectionView x:Name="PlaylistsCollection" SelectionMode="Single" SelectionChanged="OnPlaylistSelected">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" Span="2" HorizontalItemSpacing="12" VerticalItemSpacing="12" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="10" StrokeShape="RoundRectangle 20" BackgroundColor="{DynamicResource TabBgColor}" Stroke="{DynamicResource CardBorderColor}" StrokeThickness="1">
+                                <VerticalStackLayout Spacing="8">
+                                    <Border HeightRequest="120" StrokeShape="RoundRectangle 14" StrokeThickness="0">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="{DynamicResource Hero1Color}" Offset="0" />
+                                                <GradientStop Color="{DynamicResource Hero2Color}" Offset="1" />
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Grid>
+                                            <Ellipse Fill="White" Opacity="0.28" WidthRequest="80" HeightRequest="80" HorizontalOptions="End" VerticalOptions="Start" Margin="0,-20,-20,0" />
+                                            <Image Source="{Binding CoverSource}" Aspect="AspectFill" />
+                                        </Grid>
+                                    </Border>
+                                    <Label Text="{Binding Name}" TextColor="{DynamicResource TextColor}" FontFamily="JakartaBold" FontSize="15" MaxLines="1" LineBreakMode="TailTruncation" Margin="2,0" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="6">
+                <Grid ColumnDefinitions="*, Auto">
+                    <Label Text="Brani scaricati" TextColor="{DynamicResource TextColor}" FontSize="20" FontFamily="JakartaExtraBold" VerticalOptions="Center"/>
+                    <Label x:Name="SongsCountLabel" Grid.Column="1" TextColor="{DynamicResource SubTextColor}" FontFamily="JakartaSemiBold" FontSize="13" VerticalOptions="Center"/>
+                </Grid>
+
+                <Label x:Name="NoSongsLabel" Text="Ancora niente qui… I brani scaricati si ascoltano anche senza rete." FontSize="13" FontFamily="JakartaMedium" TextColor="{DynamicResource SubTextColor}" IsVisible="False"/>
+
+                <!-- Righe da 64: copertina 48 · titolo e artista · play -->
+                <CollectionView x:Name="LibraryList" SelectionMode="Single" SelectionChanged="OnSongSelected">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="48, *, 44" ColumnSpacing="12" MinimumHeightRequest="64" Padding="0,8">
+                                <Border WidthRequest="48" HeightRequest="48" StrokeShape="RoundRectangle 10" StrokeThickness="0" VerticalOptions="Center">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="{DynamicResource Hero1Color}" Offset="0" />
+                                            <GradientStop Color="{DynamicResource Hero2Color}" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <Image Source="{Binding ThumbnailUrl}" Aspect="AspectFill" />
+                                </Border>
+
+                                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="1">
+                                    <Label Text="{Binding Title}" TextColor="{DynamicResource TextColor}" FontFamily="JakartaBold" FontSize="15" MaxLines="1" LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding Artist}" TextColor="{DynamicResource SubTextColor}" FontFamily="JakartaMedium" FontSize="13" MaxLines="1" LineBreakMode="TailTruncation" />
+                                </VerticalStackLayout>
+
+                                <Path Grid.Column="2" Data="M8 5v14l11-7z" Fill="{DynamicResource TextColor}" Aspect="Uniform" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" VerticalOptions="Center" InputTransparent="True"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentView>

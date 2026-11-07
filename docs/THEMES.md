@@ -6,8 +6,8 @@ ARM themes are XAML files that contain only **colors and a few numbers**. The ap
 
 | Name in the app | Class | File | Character |
 |---|---|---|---|
-| Chiaro (default) | `LightTheme` | `ARMusic/Themes/LightTheme.xaml` | white and greys |
-| Classico | `SpotifyTheme` | `ARMusic/Themes/SpotifyTheme.xaml` | neutral dark |
+| Chiaro (default) | `LightTheme` | `ARM/Themes/LightTheme.xaml` | white and greys |
+| Classico | `SpotifyTheme` | `ARM/Themes/SpotifyTheme.xaml` | neutral dark |
 
 The theme is chosen in **Settings → Theme** (the entries come from the `ThemeService.Temi` list); the choice is saved in the preferences (`AppTheme`).
 
@@ -32,24 +32,24 @@ The meaning of the accent colors **must stay the same** in every theme, because 
 
 ## Steps
 
-1. **Create the file** `ARMusic/Themes/MyTheme.xaml` with its code-behind `MyTheme.xaml.cs` (see the example below: a few lines).
-2. **Register it** in `ARMusic/Services/ThemeService.cs`:
+1. **Create the file** `ARM/Themes/MyTheme.xaml` with its code-behind `MyTheme.xaml.cs` (see the example below: a few lines).
+2. **Register it** in `ARM/Services/ThemeService.cs`:
    - add the name to the list: `Temi = { "Chiaro", "Classico", "MyTheme" }`;
    - add the branch in the `switch` of `Applica`: `"MyTheme" => new Themes.MyTheme(),`.
 3. **Android status bar**: `ThemeService.Applica` uses dark icons only for the `"Chiaro"` theme (`AppearanceLightStatusBars = tema == "Chiaro"`). If your theme has a light background, update that condition.
 4. **Build and try it**: open Settings and pick your theme from the list.
 
-The theme name is shown through `Loc.T`; to give it a translated label, add it to `ARMusic/Localization/en.json` (see [LOCALIZATION.md](LOCALIZATION.md)). No other changes are needed: themes are included automatically by the project.
+The theme name is shown through `Loc.T`; to give it a translated label, add it to `ARM/Localization/en.json` (see [LOCALIZATION.md](LOCALIZATION.md)). No other changes are needed: themes are included automatically by the project.
 
 ## Minimal working example: the "Sabbia" theme
 
-`ARMusic/Themes/SabbiaTheme.xaml`
+`ARM/Themes/SabbiaTheme.xaml`
 
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                    x:Class="ARMusic.Themes.SabbiaTheme">
+                    x:Class="ARM.Themes.SabbiaTheme">
 
     <Color x:Key="BgColor">#F7F1E5</Color>
     <Color x:Key="TabBgColor">#FFFBF2</Color>
@@ -98,10 +98,10 @@ The theme name is shown through `Loc.T`; to give it a translated label, add it t
 </ResourceDictionary>
 ```
 
-`ARMusic/Themes/SabbiaTheme.xaml.cs`
+`ARM/Themes/SabbiaTheme.xaml.cs`
 
 ```csharp
-namespace ARMusic.Themes;
+namespace ARM.Themes;
 
 public partial class SabbiaTheme : ResourceDictionary
 {

@@ -34,16 +34,16 @@ cd ARM
 Windows (avvia direttamente l'eseguibile, non serve installare un pacchetto):
 
 ```bash
-dotnet run --project ARMusic/ARMusic.csproj -f net10.0-windows10.0.19041.0
+dotnet run --project ARM/ARM.csproj -f net10.0-windows10.0.19041.0
 ```
 
 Android (telefono collegato o emulatore avviato):
 
 ```bash
-dotnet build ARMusic/ARMusic.csproj -f net10.0-android -t:Run
+dotnet build ARM/ARM.csproj -f net10.0-android -t:Run
 ```
 
-In alternativa apri `ARMusic.slnx` in Visual Studio, scegli «Windows Machine» o un dispositivo Android e premi Avvia.
+In alternativa apri `ARM.slnx` in Visual Studio, scegli «Windows Machine» o un dispositivo Android e premi Avvia.
 
 ## Impostazioni e configurazione
 
@@ -65,12 +65,12 @@ L'app include **Chiaro** e **Classico** (scuro). Un tema è un file XAML di soli
 
 ## Lingue
 
-I testi nel codice sono scritti in italiano e tradotti con un dizionario JSON per lingua (`ARMusic/Localization/en.json`). Per aggiungere una lingua vedi [docs/LOCALIZATION.md](docs/LOCALIZATION.md) (in inglese). Al primo avvio si usa la lingua del dispositivo se supportata, altrimenti l'inglese.
+I testi nel codice sono scritti in italiano e tradotti con un dizionario JSON per lingua (`ARM/Localization/en.json`). Per aggiungere una lingua vedi [docs/LOCALIZATION.md](docs/LOCALIZATION.md) (in inglese). Al primo avvio si usa la lingua del dispositivo se supportata, altrimenti l'inglese.
 
 ## Struttura
 
 ```
-ARMusic/                  progetto MAUI (Android + Windows)
+ARM/                  progetto MAUI (Android + Windows)
   Data/                   database SQLite
   Localization/           motore di traduzione e file delle lingue
   Models/                 note, task, eventi, ordini, playlist…

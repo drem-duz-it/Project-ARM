@@ -1,0 +1,99 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="ARM.Views.MainHostPage"
+             Opacity="0"
+             BackgroundColor="{DynamicResource BgColor}"
+             NavigationPage.HasNavigationBar="False">
+
+    <!-- ARM 3.0: telefono e finestra stretta = tab in basso; finestra larga (≥ 720) = barra laterale da 248 -->
+    <Grid x:Name="RootGrid" ColumnDefinitions="Auto, *">
+
+        <!-- BARRA LATERALE (solo finestre larghe, generata da codice) -->
+        <Border x:Name="SideBar" Grid.Column="0" IsVisible="False" WidthRequest="248" Padding="16,24" Margin="-1,-1,0,-1"
+                BackgroundColor="{DynamicResource TabBgColor}" Stroke="{DynamicResource BorderColor}" StrokeThickness="1" StrokeShape="Rectangle">
+            <Grid x:Name="SideContent" RowDefinitions="Auto, Auto, Auto, *, Auto" RowSpacing="24" />
+        </Border>
+
+        <Grid Grid.Column="1" RowDefinitions="*, Auto, Auto">
+
+            <!-- 1. AREA DINAMICA (Oggi, Note, Task, Calendario, Musica) -->
+            <ContentView x:Name="PageHost" Grid.Row="0" />
+
+            <!-- 2. MINI PLAYER (3.0): superficie con bordo, raggio 12, unica ombra dell'app; avanzamento da 2 in alto -->
+            <Border x:Name="MiniPlayer" Grid.Row="1" IsVisible="False" Margin="8,8,8,8" Padding="0"
+                    StrokeShape="RoundRectangle 12" BackgroundColor="{DynamicResource MiniBgColor}" Stroke="{DynamicResource MiniBorderColor}" StrokeThickness="1">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,8" Radius="24" Opacity="0.35" />
+                </Border.Shadow>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnMiniPlayerTapped" />
+                </Border.GestureRecognizers>
+                <Grid RowDefinitions="2, Auto">
+                    <Grid x:Name="MiniTrack" Grid.Row="0" BackgroundColor="{DynamicResource BorderColor}">
+                        <BoxView x:Name="MiniFill" Color="{DynamicResource AccentColor}" HorizontalOptions="Start" WidthRequest="0" />
+                    </Grid>
+                    <Grid Grid.Row="1" ColumnDefinitions="40, *, 44, 44" ColumnSpacing="12" Padding="8,6,6,6">
+                        <toolkit:MediaElement x:Name="GlobalAudioPlayer" IsVisible="False" ShouldAutoPlay="True" />
+                        <Border Grid.Column="0" WidthRequest="40" HeightRequest="40" StrokeShape="RoundRectangle 8" BackgroundColor="{DynamicResource FieldBgColor}" Stroke="{DynamicResource BorderColor}" StrokeThickness="1" VerticalOptions="Center">
+                            <Grid>
+                                <Border WidthRequest="20" HeightRequest="20" StrokeShape="RoundRectangle 10" Stroke="{DynamicResource SubTextColor}" StrokeThickness="1.5" BackgroundColor="Transparent" HorizontalOptions="Center" VerticalOptions="Center">
+                                    <BoxView WidthRequest="5" HeightRequest="5" CornerRadius="2" Color="{DynamicResource SubTextColor}" HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
+                                <Image x:Name="MiniCover" Aspect="AspectFill" />
+                            </Grid>
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0">
+                            <Label x:Name="MiniTitle" Text="Nessun brano" TextColor="{DynamicResource MiniTextColor}" FontFamily="JakartaSemiBold" FontSize="14" LineBreakMode="TailTruncation" MaxLines="1" />
+                            <Label x:Name="MiniArtist" Text="-" TextColor="{DynamicResource SubTextColor}" FontFamily="JakartaMedium" FontSize="12" LineBreakMode="TailTruncation" MaxLines="1" />
+                        </VerticalStackLayout>
+                        <Border x:Name="MiniPlayButton" Grid.Column="2" WidthRequest="44" HeightRequest="44" StrokeShape="RoundRectangle 22" StrokeThickness="0" BackgroundColor="{DynamicResource AccentColor}" VerticalOptions="Center">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnMiniPlayClicked" />
+                            </Border.GestureRecognizers>
+                        </Border>
+                        <Grid x:Name="MiniNextButton" Grid.Column="3" WidthRequest="44" HeightRequest="44" BackgroundColor="Transparent" VerticalOptions="Center">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnMiniPlayerSkipClicked" />
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <!-- 3. BARRA DEI TAB (3.0): 5 voci da 60, bordo sopra, voce attiva in grassetto -->
+            <Border x:Name="TabBarHost" Grid.Row="2" BackgroundColor="{DynamicResource TabBgColor}" Stroke="{DynamicResource BorderColor}" StrokeThickness="1"
+                    StrokeShape="Rectangle" Padding="4,0,4,8" Margin="-1,0,-1,-1">
+                <Grid x:Name="TabBar" ColumnDefinitions="*,*,*,*,*" HeightRequest="60" />
+            </Border>
+        </Grid>
+
+        <!-- FOGLIO "NOVITÀ": sale dal basso, raggio 28, maniglia, al massimo l'82% dello schermo -->
+        <Grid x:Name="ChangelogOverlay" Grid.ColumnSpan="2" BackgroundColor="#66000000" IsVisible="False" InputTransparent="True" Opacity="0" RowDefinitions="*, Auto">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnCloseChangelogTapped" />
+            </Grid.GestureRecognizers>
+            <Border x:Name="ChangelogSheet" Grid.Row="1" BackgroundColor="{DynamicResource TabBgColor}" StrokeThickness="0" StrokeShape="RoundRectangle 16,16,0,0"
+                    Padding="20,10,20,28" MaximumWidthRequest="640">
+                <Border.GestureRecognizers>
+                    <!-- Assorbe i tocchi sul pannello per non chiuderlo -->
+                    <TapGestureRecognizer />
+                </Border.GestureRecognizers>
+                <Grid RowDefinitions="Auto, Auto, *" RowSpacing="14">
+                    <BoxView Grid.Row="0" WidthRequest="36" HeightRequest="4" CornerRadius="2" Color="{DynamicResource BorderColor}" HorizontalOptions="Center" />
+                    <Grid Grid.Row="1" ColumnDefinitions="*, Auto">
+                        <Label Text="Novità" FontFamily="JakartaBold" FontSize="20" TextColor="{DynamicResource TextColor}" VerticalOptions="Center"/>
+                        <Border Grid.Column="1" WidthRequest="44" HeightRequest="44" StrokeShape="RoundRectangle 10" BackgroundColor="{DynamicResource TabBgColor}" Stroke="{DynamicResource BorderColor}" StrokeThickness="1">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnCloseChangelogTapped" />
+                            </Border.GestureRecognizers>
+                            <Path Data="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" Fill="{DynamicResource TextColor}" Aspect="Uniform" WidthRequest="20" HeightRequest="20" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+                    </Grid>
+                    <ScrollView Grid.Row="2" x:Name="ChangelogScroll" />
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+
+</ContentPage>

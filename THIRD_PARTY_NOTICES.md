@@ -2,8 +2,8 @@
 
 | Componente | Licenza | Uso |
 |---|---|---|
-| Plus Jakarta Sans (font) | SIL Open Font License 1.1 | `ARMusic/Resources/Fonts/PlusJakartaSans-*.ttf` |
-| Open Sans (font) | Apache License 2.0 | `ARMusic/Resources/Fonts/OpenSans-*.ttf` |
+| Plus Jakarta Sans (font) | SIL Open Font License 1.1 | `ARM/Resources/Fonts/PlusJakartaSans-*.ttf` |
+| Open Sans (font) | Apache License 2.0 | `ARM/Resources/Fonts/OpenSans-*.ttf` |
 | .NET MAUI, CommunityToolkit.Maui (+ MediaElement) | MIT | interfaccia e audio |
 | sqlite-net-pcl | MIT | database locale |
 | MailKit / MimeKit | MIT | lettura IMAP Gmail (solo Windows) |

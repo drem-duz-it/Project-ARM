@@ -6,8 +6,8 @@ I temi di ARM sono file XAML che contengono soltanto **colori e qualche numero**
 
 | Nome nell'app | Classe | File | Carattere |
 |---|---|---|---|
-| Chiaro (predefinito) | `LightTheme` | `ARMusic/Themes/LightTheme.xaml` | bianco e grigi |
-| Classico | `SpotifyTheme` | `ARMusic/Themes/SpotifyTheme.xaml` | scuro neutro |
+| Chiaro (predefinito) | `LightTheme` | `ARM/Themes/LightTheme.xaml` | bianco e grigi |
+| Classico | `SpotifyTheme` | `ARM/Themes/SpotifyTheme.xaml` | scuro neutro |
 
 Il tema si sceglie in **Impostazioni → Tema** (le voci vengono dall'elenco `ThemeService.Temi`); la scelta è salvata nelle preferenze (`AppTheme`).
 
@@ -32,8 +32,8 @@ Il significato dei colori accento **deve restare lo stesso** in tutti i temi, pe
 
 ## Passi
 
-1. **Crea il file** `ARMusic/Themes/MioTema.xaml` con il suo code-behind `MioTema.xaml.cs` (vedi l'esempio sotto: sono poche righe).
-2. **Registralo** in `ARMusic/Services/ThemeService.cs`:
+1. **Crea il file** `ARM/Themes/MioTema.xaml` con il suo code-behind `MioTema.xaml.cs` (vedi l'esempio sotto: sono poche righe).
+2. **Registralo** in `ARM/Services/ThemeService.cs`:
    - aggiungi il nome all'elenco: `Temi = { "Chiaro", "Classico", "MioTema" }`;
    - aggiungi il ramo nello `switch` di `Applica`: `"MioTema" => new Themes.MioTema(),`.
 3. **Barra di stato Android**: `ThemeService.Applica` mette le icone scure solo per il tema `"Chiaro"` (`AppearanceLightStatusBars = tema == "Chiaro"`). Se il tuo tema ha lo sfondo chiaro, aggiorna quella condizione.
@@ -43,13 +43,13 @@ Non servono altre modifiche: i temi sono inclusi automaticamente dal progetto.
 
 ## Esempio minimo funzionante: tema «Sabbia»
 
-`ARMusic/Themes/SabbiaTheme.xaml`
+`ARM/Themes/SabbiaTheme.xaml`
 
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                    x:Class="ARMusic.Themes.SabbiaTheme">
+                    x:Class="ARM.Themes.SabbiaTheme">
 
     <Color x:Key="BgColor">#F7F1E5</Color>
     <Color x:Key="TabBgColor">#FFFBF2</Color>
@@ -98,10 +98,10 @@ Non servono altre modifiche: i temi sono inclusi automaticamente dal progetto.
 </ResourceDictionary>
 ```
 
-`ARMusic/Themes/SabbiaTheme.xaml.cs`
+`ARM/Themes/SabbiaTheme.xaml.cs`
 
 ```csharp
-namespace ARMusic.Themes;
+namespace ARM.Themes;
 
 public partial class SabbiaTheme : ResourceDictionary
 {

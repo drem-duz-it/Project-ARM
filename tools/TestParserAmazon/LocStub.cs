@@ -1,4 +1,4 @@
-namespace ARMusic;
+namespace ARM;
 
 // Versione minima di Loc per il test da riga di comando: restituisce il testo italiano così com'è.
 public static class Loc
