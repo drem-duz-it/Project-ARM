@@ -5,7 +5,7 @@ using Path = Microsoft.Maui.Controls.Shapes.Path;
 
 namespace ARM;
 
-// Sistema di design di ARM 3.0 (da Claude Design, "Oggi" sobria e professionale):
+// Sistema di design di ARM 3.0 ("Oggi" sobria e professionale):
 // font Plus Jakarta Sans, spaziatura 4/8/12/16/24/32, card raggio 12 con bordo 1 (niente ombre), campi 52 raggio 10,
 // pulsanti 44 raggio 10, icone lineari (tratto 1,5 su griglia 24), aree toccabili >= 44. Nessuna emoji.
 // Tutti i colori arrivano dai token del tema attivo (Themes/*.xaml).
@@ -79,7 +79,7 @@ public static class Ui
         public const string Arrow = "M5 12h14 M13 6l6 6-6 6";
     }
 
-    // Versione lineare (Claude Design 3.0, griglia 24, tratto 1,5) delle icone: Icon() la usa al posto di quella piena.
+    // Versione lineare (ARM 3.0, griglia 24, tratto 1,5) delle icone: Icon() la usa al posto di quella piena.
     private static readonly Dictionary<string, string> LineIcons = new()
     {
         [Icons.Today] = "M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1Z",

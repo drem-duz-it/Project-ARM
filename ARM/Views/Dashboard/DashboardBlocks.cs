@@ -4,7 +4,7 @@ using Microsoft.Maui.Controls.Shapes;
 
 namespace ARM.Views.Dashboard;
 
-// Blocchi della dashboard "Oggi" (ARM 3.0, da Claude Design): card piatte raggio 12 con bordo 1,
+// Blocchi della dashboard "Oggi" (ARM 3.0): card piatte raggio 12 con bordo 1,
 // titoli di sezione in maiuscoletto, numeri tabellari, solo forme geometriche e icone lineari.
 // Ogni blocco si ricostruisce intero a ogni aggiornamento: nessuno contiene campi di testo.
 public static class Blocks

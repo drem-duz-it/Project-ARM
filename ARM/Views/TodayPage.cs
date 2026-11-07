@@ -8,7 +8,7 @@ using Path = Microsoft.Maui.Controls.Shapes.Path;
 
 namespace ARM.Views;
 
-// Pagina "Oggi" (ARM 3.0, da Claude Design): uno spazio di lavoro sobrio.
+// Pagina "Oggi" (ARM 3.0): uno spazio di lavoro sobrio.
 // Ordine dei blocchi: intestazione · scrivi al volo + azioni rapide · conflitti · 4 indicatori · ordini in arrivo ·
 // agenda di oggi · task · pagamenti · musica · note fissate · stato della sincronizzazione.
 // Larghezza del contenuto: < 640 telefono (1 colonna) · 640-999 tablet (2 colonne) · ≥ 1000 desktop (8+4, poi 3 colonne).
