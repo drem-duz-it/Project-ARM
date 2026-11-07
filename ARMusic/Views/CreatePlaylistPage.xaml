@@ -1,0 +1,70 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ARMusic.Views.CreatePlaylistPage"
+             BackgroundColor="{DynamicResource BgColor}"
+             NavigationPage.HasNavigationBar="False"
+             Title="Nuova Playlist">
+
+    <Grid RowDefinitions="Auto, *">
+
+        <!-- Barra in alto: chiudi + titolo (stile editor dello spazio di lavoro) -->
+        <Grid Grid.Row="0" Padding="12,20,12,8" ColumnDefinitions="Auto, *, Auto">
+            <Border WidthRequest="44" HeightRequest="44" StrokeShape="RoundRectangle 22" BackgroundColor="{DynamicResource TabBgColor}" Stroke="{DynamicResource BorderColor}" StrokeThickness="1">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCancelClicked" />
+                </Border.GestureRecognizers>
+                <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
+                      Fill="{DynamicResource TextColor}" Aspect="Uniform" WidthRequest="20" HeightRequest="20" HorizontalOptions="Center" VerticalOptions="Center"/>
+            </Border>
+            <Label x:Name="HeaderTitle" Grid.Column="1" Text="Nuova playlist" FontSize="17" FontFamily="JakartaExtraBold" TextColor="{DynamicResource TextColor}" HorizontalOptions="Center" VerticalOptions="Center"/>
+            <BoxView Grid.Column="2" WidthRequest="44" Color="Transparent"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="20,8,20,32" Spacing="20" MaximumWidthRequest="640">
+
+                <!-- Immagine di Copertina (Cliccabile per sceglierla dal telefono) -->
+                <Border WidthRequest="160" HeightRequest="160" StrokeShape="RoundRectangle 22" StrokeDashArray="6,4" StrokeThickness="2"
+                        BackgroundColor="Transparent" Stroke="{DynamicResource BorderColor}" HorizontalOptions="Center">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSelectImageClicked" />
+                    </Border.GestureRecognizers>
+                    <Grid>
+                        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="8">
+                            <Path Data="M4,4H7L9,2H15L17,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z"
+                                  Fill="{DynamicResource SubTextColor}" Aspect="Uniform" WidthRequest="28" HeightRequest="28" HorizontalOptions="Center"/>
+                            <Label Text="Scegli copertina" FontSize="13" FontFamily="JakartaSemiBold" TextColor="{DynamicResource SubTextColor}" HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                        <Image x:Name="PlaylistImage" Aspect="AspectFill" />
+                    </Grid>
+                </Border>
+
+                <!-- Nome della Playlist -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="NOME" FontSize="11" FontFamily="JakartaExtraBold" CharacterSpacing="1.1" TextColor="{DynamicResource SubTextColor}"/>
+                    <Border Padding="16,2" MinimumHeightRequest="52" StrokeShape="RoundRectangle 16" BackgroundColor="{DynamicResource FieldBgColor}" StrokeThickness="0">
+                        <Entry x:Name="NameEntry" Placeholder="Es. Domenica mattina" FontSize="16" FontFamily="JakartaSemiBold" VerticalOptions="Center"
+                               TextColor="{DynamicResource TextColor}" PlaceholderColor="{DynamicResource SubTextColor}" BackgroundColor="Transparent" />
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Descrizione -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="DESCRIZIONE" FontSize="11" FontFamily="JakartaExtraBold" CharacterSpacing="1.1" TextColor="{DynamicResource SubTextColor}"/>
+                    <Border Padding="16,2" MinimumHeightRequest="52" StrokeShape="RoundRectangle 16" BackgroundColor="{DynamicResource FieldBgColor}" StrokeThickness="0">
+                        <Editor x:Name="DescriptionEditor" Placeholder="Facoltativa" HeightRequest="100" FontSize="15" FontFamily="JakartaMedium"
+                                TextColor="{DynamicResource TextColor}" PlaceholderColor="{DynamicResource SubTextColor}" BackgroundColor="Transparent" />
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Pulsanti -->
+                <Button x:Name="SaveButton" Text="Salva playlist" BackgroundColor="{DynamicResource AccentColor}" CornerRadius="16" HeightRequest="52"
+                        TextColor="{DynamicResource OnAccentColor}" FontFamily="JakartaExtraBold" FontSize="16" Clicked="OnSaveClicked" />
+
+                <!-- Pulsante Elimina (Nascosto di default) -->
+                <Button x:Name="DeleteButton" Text="Elimina playlist" BackgroundColor="Transparent" CornerRadius="16" HeightRequest="48"
+                        TextColor="{DynamicResource Accent2Color}" FontFamily="JakartaExtraBold" FontSize="15" IsVisible="False" Clicked="OnDeleteClicked"/>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

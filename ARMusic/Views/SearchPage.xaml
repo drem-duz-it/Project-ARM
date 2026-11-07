@@ -1,0 +1,78 @@
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ARMusic.Views.SearchPage"
+             BackgroundColor="{DynamicResource BgColor}">
+
+    <!-- ARMusic · Cerca (ARM 2.5): campo 52 su FieldBg, avviso dello streaming, risultati in righe da 64 -->
+    <Grid RowDefinitions="Auto, Auto, *">
+
+        <Border Grid.Row="0" Margin="20,0,20,10" Padding="16,2" MinimumHeightRequest="52" StrokeShape="RoundRectangle 16" StrokeThickness="0"
+                BackgroundColor="{DynamicResource FieldBgColor}">
+            <Grid ColumnDefinitions="Auto, *" ColumnSpacing="10">
+                <Path Data="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                      Fill="{DynamicResource SubTextColor}" Aspect="Uniform" WidthRequest="20" HeightRequest="20" VerticalOptions="Center"/>
+                <Entry x:Name="MusicSearchBar" Grid.Column="1"
+                       Placeholder="Cosa vuoi ascoltare?"
+                       PlaceholderColor="{DynamicResource SubTextColor}"
+                       TextColor="{DynamicResource TextColor}"
+                       BackgroundColor="Transparent"
+                       FontFamily="JakartaSemiBold"
+                       FontSize="16"
+                       VerticalOptions="Center"
+                       ReturnType="Search"
+                       Completed="OnSearchButtonPressed" />
+            </Grid>
+        </Border>
+
+        <!-- Suggerimento iniziale -->
+        <VerticalStackLayout x:Name="SearchHint" Grid.Row="2" VerticalOptions="Center" HorizontalOptions="Center" Spacing="8" Margin="40,0,40,80">
+            <Border WidthRequest="56" HeightRequest="56" StrokeShape="RoundRectangle 28" BackgroundColor="{DynamicResource SoftAccentColor}" StrokeThickness="0" HorizontalOptions="Center" Margin="0,0,0,4">
+                <Path Data="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"
+                      Fill="{DynamicResource AccentColor}" Aspect="Uniform" WidthRequest="28" HeightRequest="28" HorizontalOptions="Center" VerticalOptions="Center"/>
+            </Border>
+            <Label Text="Cerca un brano o un artista" FontSize="16" FontFamily="JakartaBold" TextColor="{DynamicResource TextColor}" HorizontalTextAlignment="Center"/>
+            <Label Text="Prova con il nome dell'artista o una parola del titolo." FontSize="13" FontFamily="JakartaMedium" TextColor="{DynamicResource SubTextColor}" HorizontalTextAlignment="Center"/>
+        </VerticalStackLayout>
+
+        <!-- Risultati: copertina 48 · titolo e artista · azioni -->
+        <CollectionView x:Name="SearchResultsList"
+                        Grid.Row="2"
+                        SelectionMode="Single"
+                        SelectionChanged="OnSongSelected"
+                        Margin="20,0,20,0">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnDefinitions="48, *, 44" ColumnSpacing="12" MinimumHeightRequest="64" Padding="0,8">
+                        <Border WidthRequest="48" HeightRequest="48" StrokeShape="RoundRectangle 10" StrokeThickness="0" VerticalOptions="Center">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="{DynamicResource Hero1Color}" Offset="0" />
+                                    <GradientStop Color="{DynamicResource Hero2Color}" Offset="1" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Image Source="{Binding ThumbnailUrl}" Aspect="AspectFill" />
+                        </Border>
+
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="1">
+                            <Label Text="{Binding Title}" TextColor="{DynamicResource TextColor}" FontFamily="JakartaBold" FontSize="15" MaxLines="2" LineBreakMode="TailTruncation" />
+                            <Label Text="{Binding Artist}" TextColor="{DynamicResource SubTextColor}" FontFamily="JakartaMedium" FontSize="13" MaxLines="1" LineBreakMode="TailTruncation" />
+                        </VerticalStackLayout>
+
+                        <Path Grid.Column="2" Data="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                              Fill="{DynamicResource SubTextColor}" Aspect="Uniform" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" VerticalOptions="Center" InputTransparent="True"/>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Rotellina di caricamento -->
+        <ActivityIndicator x:Name="LoadingSpinner"
+                           Grid.Row="2"
+                           IsRunning="False"
+                           IsVisible="False"
+                           Color="{DynamicResource AccentColor}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+    </Grid>
+
+</ContentView>

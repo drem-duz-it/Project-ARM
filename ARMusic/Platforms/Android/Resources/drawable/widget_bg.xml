@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fondo del widget: raggio 22, nessuna ombra né gradiente -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/widget_bg" />
+    <corners android:radius="22dp" />
+</shape>

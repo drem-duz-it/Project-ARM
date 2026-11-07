@@ -1,0 +1,53 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    x:Class="ARMusic.Themes.SpotifyTheme">
+
+    <!-- Tema Classico: scuro neutro, accento bianco (ARM 3.0). I significati dei colori sono gli stessi in tutti i temi. -->
+    <Color x:Key="BgColor">#0E0E10</Color>
+    <Color x:Key="TabBgColor">#161618</Color>
+    <Color x:Key="TextColor">#F4F4F5</Color>
+    <Color x:Key="SubTextColor">#A1A1AA</Color>
+    <Color x:Key="AccentColor">#FFFFFF</Color>
+    <Color x:Key="Accent2Color">#E5675F</Color>
+    <Color x:Key="Accent3Color">#FFFFFF</Color>
+    <Color x:Key="Accent4Color">#D9A441</Color>
+    <Color x:Key="Accent5Color">#5B8DEF</Color>
+    <Color x:Key="SoftAccentColor">#1F1F22</Color>
+    <Color x:Key="BorderColor">#2A2A2E</Color>
+    <Color x:Key="OnAccentColor">#0E0E10</Color>
+    <Color x:Key="ShadowColor">#000000</Color>
+
+    <!-- Valori derivati del design -->
+    <Color x:Key="FieldBgColor">#1F1F22</Color>
+    <Color x:Key="CardBorderColor">#2A2A2E</Color>
+    <Color x:Key="Hero1Color">#1F1F22</Color>
+    <Color x:Key="Hero2Color">#161618</Color>
+    <Color x:Key="OnHeroColor">#F4F4F5</Color>
+    <Color x:Key="MiniBgColor">#161618</Color>
+    <Color x:Key="MiniTextColor">#F4F4F5</Color>
+    <Color x:Key="MiniBorderColor">#2A2A2E</Color>
+    <Color x:Key="SwitchOffColor">#3A3A40</Color>
+    <Color x:Key="FabShadowColor">#000000</Color>
+
+    <!-- 3.0: superficie rialzata, bordo forte, rosso tenue (solo ritardi), punti categoria -->
+    <Color x:Key="SurfaceRaisedColor">#1F1F22</Color>
+    <Color x:Key="BorderStrongColor">#3A3A40</Color>
+    <Color x:Key="WarnColor">#E5675F</Color>
+    <Color x:Key="Cat1">#5B8DEF</Color>
+    <Color x:Key="Cat2">#D9A441</Color>
+    <Color x:Key="Cat3">#9B7FE0</Color>
+    <Color x:Key="Cat4">#3FB6A8</Color>
+    <Color x:Key="Cat5">#D9779B</Color>
+
+    <!-- Fondi delle note (3.0: neutri; il colore della nota diventa un punto) -->
+    <Color x:Key="Pastel1">#161618</Color>
+    <Color x:Key="Pastel2">#161618</Color>
+    <Color x:Key="Pastel3">#161618</Color>
+    <Color x:Key="Pastel4">#161618</Color>
+    <Color x:Key="Pastel5">#161618</Color>
+    <Color x:Key="Pastel6">#161618</Color>
+
+    <x:Double x:Key="SoftAlpha">0.16</x:Double>
+    <x:Double x:Key="ShadowOpacity">0.0</x:Double>
+    <x:Double x:Key="FabShadowOpacity">0.5</x:Double>
+</ResourceDictionary>

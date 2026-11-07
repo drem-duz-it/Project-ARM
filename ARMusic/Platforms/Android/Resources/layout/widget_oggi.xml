@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Widget "ARM · Oggi": data, cose di oggi (task da spuntare, eventi, pagamenti) e campo "Scrivi al volo" -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/widget_bg"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:id="@+id/widget_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/widget_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/widget_accent"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05"
+            android:text="ARM · OGGI" />
+        <TextView
+            android:id="@+id/widget_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/widget_text"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="Giornata libera" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/widget_quick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/widget_field"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:minHeight="40dp">
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/ic_widget_spark" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/widget_sub"
+            android:textSize="13sp"
+            android:maxLines="1"
+            android:text="Scrivi al volo…" />
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/ic_widget_plus" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/widget_empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:textColor="@color/widget_sub"
+        android:textSize="13sp"
+        android:visibility="gone"
+        android:text="Niente in programma oggi" />
+
+    <LinearLayout android:id="@+id/row0" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:gravity="center_vertical" android:orientation="horizontal" android:minHeight="40dp" android:visibility="gone">
+        <ImageView android:id="@+id/row0_icon" android:layout_width="20dp" android:layout_height="20dp" android:padding="1dp" android:src="@drawable/widget_check" />
+        <TextView android:id="@+id/row0_text" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="10dp" android:textColor="@color/widget_text" android:textSize="14sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end" />
+        <TextView android:id="@+id/row0_meta" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:textColor="@color/widget_sub" android:textSize="12sp" android:maxLines="1" />
+    </LinearLayout>
+    <LinearLayout android:id="@+id/row1" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" android:minHeight="40dp" android:visibility="gone">
+        <ImageView android:id="@+id/row1_icon" android:layout_width="20dp" android:layout_height="20dp" android:padding="1dp" android:src="@drawable/widget_check" />
+        <TextView android:id="@+id/row1_text" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="10dp" android:textColor="@color/widget_text" android:textSize="14sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end" />
+        <TextView android:id="@+id/row1_meta" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:textColor="@color/widget_sub" android:textSize="12sp" android:maxLines="1" />
+    </LinearLayout>
+    <LinearLayout android:id="@+id/row2" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" android:minHeight="40dp" android:visibility="gone">
+        <ImageView android:id="@+id/row2_icon" android:layout_width="20dp" android:layout_height="20dp" android:padding="1dp" android:src="@drawable/widget_check" />
+        <TextView android:id="@+id/row2_text" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="10dp" android:textColor="@color/widget_text" android:textSize="14sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end" />
+        <TextView android:id="@+id/row2_meta" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:textColor="@color/widget_sub" android:textSize="12sp" android:maxLines="1" />
+    </LinearLayout>
+    <LinearLayout android:id="@+id/row3" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" android:minHeight="40dp" android:visibility="gone">
+        <ImageView android:id="@+id/row3_icon" android:layout_width="20dp" android:layout_height="20dp" android:padding="1dp" android:src="@drawable/widget_check" />
+        <TextView android:id="@+id/row3_text" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="10dp" android:textColor="@color/widget_text" android:textSize="14sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end" />
+        <TextView android:id="@+id/row3_meta" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:textColor="@color/widget_sub" android:textSize="12sp" android:maxLines="1" />
+    </LinearLayout>
+    <LinearLayout android:id="@+id/row4" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" android:minHeight="40dp" android:visibility="gone">
+        <ImageView android:id="@+id/row4_icon" android:layout_width="20dp" android:layout_height="20dp" android:padding="1dp" android:src="@drawable/widget_check" />
+        <TextView android:id="@+id/row4_text" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="10dp" android:textColor="@color/widget_text" android:textSize="14sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end" />
+        <TextView android:id="@+id/row4_meta" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:textColor="@color/widget_sub" android:textSize="12sp" android:maxLines="1" />
+    </LinearLayout>
+</LinearLayout>

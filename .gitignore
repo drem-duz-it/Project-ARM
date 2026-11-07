@@ -1,0 +1,33 @@
+# Build
+[Bb]in/
+[Oo]bj/
+*.apk
+*.aab
+*.msix
+*.msixbundle
+AppPackages/
+BundleArtifacts/
+Pubblicazione/
+
+# Visual Studio / Rider / VS Code
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+*.DotSettings.user
+
+# Chiavi, certificati, segreti
+*.pfx
+*.snk
+*.keystore
+*.jks
+.env
+.env.*
+secrets*
+
+# Varie
+.tmp/
+.claude/
+Thumbs.db
+.DS_Store

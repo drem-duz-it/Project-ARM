@@ -1,0 +1,121 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="ARMusic.Views.PlayerPage"
+             BackgroundColor="{DynamicResource BgColor}">
+
+    <!-- Player (ARM 2.5): [riduci] IN RIPRODUZIONE [ ], copertina 334 r28 (o testo), titolo e artista,
+         avanzamento, controlli con play 72, chip "Testo" -->
+    <ScrollView>
+        <VerticalStackLayout Spacing="18" Padding="0,0,0,28" MaximumWidthRequest="520">
+
+            <Grid Padding="12,20,12,0" ColumnDefinitions="44, *, 44">
+                <Grid WidthRequest="44" HeightRequest="44" BackgroundColor="Transparent">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCloseClicked" />
+                    </Grid.GestureRecognizers>
+                    <Path Data="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z" Fill="{DynamicResource TextColor}" Aspect="Uniform" WidthRequest="26" HeightRequest="26" HorizontalOptions="Center" VerticalOptions="Center"/>
+                </Grid>
+                <Label Grid.Column="1" Text="IN RIPRODUZIONE" HorizontalOptions="Center" VerticalOptions="Center" TextColor="{DynamicResource SubTextColor}" FontFamily="JakartaExtraBold" FontSize="11" CharacterSpacing="1.1"/>
+            </Grid>
+
+            <!-- COPERTINA (gradiente con due cerchi se manca l'immagine) -->
+            <Border x:Name="CoverBox" WidthRequest="334" HeightRequest="334" StrokeShape="RoundRectangle 28" HorizontalOptions="Center" StrokeThickness="0">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="{DynamicResource Hero1Color}" Offset="0" />
+                        <GradientStop Color="{DynamicResource Hero2Color}" Offset="1" />
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Grid>
+                    <Ellipse Fill="White" Opacity="0.28" WidthRequest="220" HeightRequest="220" HorizontalOptions="End" VerticalOptions="Start" Margin="0,-60,-60,0" />
+                    <Ellipse Fill="Black" Opacity="0.16" WidthRequest="120" HeightRequest="120" HorizontalOptions="Start" VerticalOptions="End" Margin="36,0,0,36" />
+                    <Image x:Name="CoverImage" Aspect="AspectFill" />
+                </Grid>
+            </Border>
+
+            <!-- TESTO (al posto della copertina): fondo SoftAccent, riga cantata più grande -->
+            <Border x:Name="LyricsBox" IsVisible="False" HeightRequest="334" WidthRequest="334" HorizontalOptions="Center" StrokeShape="RoundRectangle 28" StrokeThickness="0" BackgroundColor="{DynamicResource SoftAccentColor}">
+                <Grid>
+                    <ScrollView x:Name="LyricsScroll" Scrolled="OnLyricsScrolled" VerticalScrollBarVisibility="Never">
+                        <VerticalStackLayout x:Name="LyricsLines" Spacing="10" Padding="24,130" />
+                    </ScrollView>
+                    <Label x:Name="LyricsStatus" TextColor="{DynamicResource SubTextColor}" FontFamily="JakartaSemiBold" FontSize="15" HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" Margin="24" />
+                </Grid>
+            </Border>
+
+            <!-- TITOLO E ARTISTA -->
+            <VerticalStackLayout Spacing="2" Padding="28,0">
+                <Label x:Name="TitleLabel" TextColor="{DynamicResource TextColor}" FontSize="24" FontFamily="JakartaExtraBold" CharacterSpacing="-0.4" MaxLines="1" LineBreakMode="TailTruncation"/>
+                <Label x:Name="ArtistLabel" TextColor="{DynamicResource SubTextColor}" FontFamily="JakartaMedium" FontSize="15" />
+            </VerticalStackLayout>
+
+            <!-- AVANZAMENTO -->
+            <VerticalStackLayout Spacing="0" Padding="20,0">
+                <Slider x:Name="PositionSlider" MinimumTrackColor="{DynamicResource AccentColor}" MaximumTrackColor="{DynamicResource BorderColor}" ThumbColor="{DynamicResource AccentColor}" DragStarted="OnSliderDragStarted" DragCompleted="OnSliderDragCompleted"/>
+                <Grid ColumnDefinitions="*, *" Padding="8,0">
+                    <Label x:Name="CurrentTimeLabel" Text="0:00" TextColor="{DynamicResource SubTextColor}" FontFamily="JakartaSemiBold" FontSize="13"/>
+                    <Label x:Name="TotalTimeLabel" Grid.Column="1" Text="0:00" TextColor="{DynamicResource SubTextColor}" FontFamily="JakartaSemiBold" FontSize="13" HorizontalOptions="End"/>
+                </Grid>
+            </VerticalStackLayout>
+
+            <!-- CONTROLLI: casuale · precedente · play/pausa 72 · successivo · ripeti -->
+            <Grid ColumnDefinitions="*, *, Auto, *, *" Padding="28,0">
+                <Grid x:Name="ShuffleButtonContainer" Grid.Column="0" WidthRequest="44" HeightRequest="44" BackgroundColor="Transparent" HorizontalOptions="Start">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnShuffleClicked" />
+                    </Grid.GestureRecognizers>
+                    <Path x:Name="ShuffleIcon" Data="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"
+                          Fill="{DynamicResource SubTextColor}" Aspect="Uniform" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" VerticalOptions="Center"/>
+                </Grid>
+
+                <Grid Grid.Column="1" WidthRequest="44" HeightRequest="44" BackgroundColor="Transparent">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnPreviousClicked" />
+                    </Grid.GestureRecognizers>
+                    <Path Data="M6 6h2v12H6zm3.5 6l8.5 6V6z" Fill="{DynamicResource TextColor}" Aspect="Uniform" WidthRequest="28" HeightRequest="28" HorizontalOptions="Center" VerticalOptions="Center"/>
+                </Grid>
+
+                <Border x:Name="PlayPauseButtonContainer" Grid.Column="2" WidthRequest="72" HeightRequest="72" StrokeShape="RoundRectangle 36" BackgroundColor="{DynamicResource AccentColor}" StrokeThickness="0">
+                    <Border.Shadow>
+                        <Shadow Brush="{DynamicResource FabShadowColor}" Offset="0,8" Radius="20" Opacity="0.35" />
+                    </Border.Shadow>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnPlayPauseClicked" />
+                    </Border.GestureRecognizers>
+                    <Path x:Name="PlayPauseIcon" Data="M6 19h4V5H6v14zm8-14v14h4V5h-4z"
+                          Fill="{DynamicResource OnAccentColor}" Aspect="Uniform" WidthRequest="32" HeightRequest="32" HorizontalOptions="Center" VerticalOptions="Center"/>
+                </Border>
+
+                <Grid Grid.Column="3" WidthRequest="44" HeightRequest="44" BackgroundColor="Transparent">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSkipClicked" />
+                    </Grid.GestureRecognizers>
+                    <Path Data="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" Fill="{DynamicResource TextColor}" Aspect="Uniform" WidthRequest="28" HeightRequest="28" HorizontalOptions="Center" VerticalOptions="Center"/>
+                </Grid>
+
+                <Grid x:Name="LoopButtonContainer" Grid.Column="4" WidthRequest="44" HeightRequest="44" BackgroundColor="Transparent" HorizontalOptions="End">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnLoopClicked" />
+                    </Grid.GestureRecognizers>
+                    <Path x:Name="LoopIcon" Data="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"
+                          Fill="{DynamicResource SubTextColor}" Aspect="Uniform" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" VerticalOptions="Center"/>
+                </Grid>
+            </Grid>
+
+            <!-- Chip "Testo": attiva = fondo TextColor -->
+            <Border x:Name="LyricsButtonContainer" HorizontalOptions="Center" HeightRequest="36" Padding="14,0" StrokeShape="RoundRectangle 18"
+                    BackgroundColor="{DynamicResource TabBgColor}" Stroke="{DynamicResource BorderColor}" StrokeThickness="1">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnLyricsClicked" />
+                </Border.GestureRecognizers>
+                <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                    <Path x:Name="LyricsIcon" Data="M14 17H4v2h10v-2zm6-8H4v2h16V9zM4 15h16v-2H4v2zM4 5v2h16V5H4z"
+                          Fill="{DynamicResource TextColor}" Aspect="Uniform" WidthRequest="18" HeightRequest="18" VerticalOptions="Center"/>
+                    <Label x:Name="LyricsLabel" Text="Testo" FontFamily="JakartaBold" FontSize="14" TextColor="{DynamicResource TextColor}" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

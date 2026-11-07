@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Colori del widget "ARM · Oggi" (tema chiaro). La variante scura sta in values-night e segue il sistema. -->
+<resources>
+    <color name="widget_bg">#FFFFFFFF</color>
+    <color name="widget_text">#FF17162B</color>
+    <color name="widget_sub">#FF66647D</color>
+    <color name="widget_accent">#FF6C4DFF</color>
+    <color name="widget_field">#FFF1F0F7</color>
+</resources>

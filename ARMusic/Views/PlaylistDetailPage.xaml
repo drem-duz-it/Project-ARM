@@ -1,0 +1,129 @@
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:loc="clr-namespace:ARMusic"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="ARMusic.Views.PlaylistDetailPage"
+             BackgroundColor="{DynamicResource BgColor}">
+
+    <ContentView.Resources>
+        <toolkit:InvertedBoolConverter x:Key="NotConverter" />
+    </ContentView.Resources>
+
+    <!-- Dettaglio playlist (ARM 2.5): [indietro] [modifica], copertina 200 r24, titolo 30, Riproduci · Casuale, righe da 64 -->
+    <Grid RowDefinitions="Auto, Auto, *">
+
+        <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto" Padding="20,0,20,0">
+            <Border Grid.Column="0" WidthRequest="44" HeightRequest="44" StrokeShape="RoundRectangle 22" BackgroundColor="{DynamicResource TabBgColor}" Stroke="{DynamicResource BorderColor}" StrokeThickness="1">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBackClicked" />
+                </Border.GestureRecognizers>
+                <Path Data="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"
+                      Fill="{DynamicResource TextColor}" Aspect="Uniform" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" VerticalOptions="Center"/>
+            </Border>
+
+            <Border Grid.Column="2" WidthRequest="44" HeightRequest="44" StrokeShape="RoundRectangle 22" BackgroundColor="{DynamicResource TabBgColor}" Stroke="{DynamicResource BorderColor}" StrokeThickness="1">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnEditClicked" />
+                </Border.GestureRecognizers>
+                <Path Data="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                      Fill="{DynamicResource TextColor}" Aspect="Uniform" WidthRequest="20" HeightRequest="20" HorizontalOptions="Center" VerticalOptions="Center"/>
+            </Border>
+        </Grid>
+
+        <VerticalStackLayout x:Name="HeaderContainer" Grid.Row="1" Padding="20,6,20,12" Spacing="16">
+            <Border x:Name="ImageContainer" WidthRequest="200" HeightRequest="200" StrokeShape="RoundRectangle 24" StrokeThickness="0" HorizontalOptions="Center">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="{DynamicResource Hero1Color}" Offset="0" />
+                        <GradientStop Color="{DynamicResource Hero2Color}" Offset="1" />
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Grid>
+                    <Ellipse Fill="White" Opacity="0.28" WidthRequest="130" HeightRequest="130" HorizontalOptions="End" VerticalOptions="Start" Margin="0,-34,-34,0" />
+                    <Ellipse Fill="Black" Opacity="0.16" WidthRequest="70" HeightRequest="70" HorizontalOptions="Start" VerticalOptions="End" Margin="22,0,0,22" />
+                    <Image x:Name="HeaderImage" Aspect="AspectFill" />
+                </Grid>
+            </Border>
+
+            <VerticalStackLayout Spacing="4">
+                <Label x:Name="HeaderTitle" TextColor="{DynamicResource TextColor}" FontSize="30" FontFamily="JakartaExtraBold" CharacterSpacing="-0.6" HorizontalTextAlignment="Center" />
+                <Label x:Name="HeaderDescription" TextColor="{DynamicResource SubTextColor}" FontSize="15" FontFamily="JakartaMedium" HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+
+            <!-- Riproduci (principale) · Casuale (secondario) -->
+            <Grid ColumnDefinitions="*, *" ColumnSpacing="10" MaximumWidthRequest="520">
+                <Border x:Name="PlayAllButton" HeightRequest="52" StrokeShape="RoundRectangle 16" BackgroundColor="{DynamicResource AccentColor}" StrokeThickness="0">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnPlayAllClicked" />
+                    </Border.GestureRecognizers>
+                    <HorizontalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Path Data="M8 5v14l11-7z" Fill="{DynamicResource OnAccentColor}" Aspect="Uniform" WidthRequest="22" HeightRequest="22" VerticalOptions="Center"/>
+                        <Label Text="Riproduci" TextColor="{DynamicResource OnAccentColor}" FontFamily="JakartaExtraBold" FontSize="16" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </Border>
+                <Border x:Name="ShuffleAllButton" Grid.Column="1" HeightRequest="52" StrokeShape="RoundRectangle 16" BackgroundColor="{DynamicResource SoftAccentColor}" StrokeThickness="0">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnShuffleAllClicked" />
+                    </Border.GestureRecognizers>
+                    <HorizontalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Path Data="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z" Fill="{DynamicResource AccentColor}" Aspect="Uniform" WidthRequest="22" HeightRequest="22" VerticalOptions="Center"/>
+                        <Label Text="Casuale" TextColor="{DynamicResource AccentColor}" FontFamily="JakartaExtraBold" FontSize="16" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- Brani non ancora scaricati (es. importati da Spotify): link centrato -->
+            <HorizontalStackLayout x:Name="MissingButton" IsVisible="False" Spacing="4" HorizontalOptions="Center" MinimumHeightRequest="44">
+                <HorizontalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnDownloadMissingClicked" />
+                </HorizontalStackLayout.GestureRecognizers>
+                <Path Data="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" Fill="{DynamicResource AccentColor}" Aspect="Uniform" WidthRequest="16" HeightRequest="16" VerticalOptions="Center"/>
+                <Label x:Name="MissingLabel" TextColor="{DynamicResource AccentColor}" FontFamily="JakartaBold" FontSize="14" VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+
+        <!-- LISTA DEI BRANI -->
+        <CollectionView x:Name="PlaylistSongsList" Grid.Row="2" Scrolled="OnCollectionViewScrolled" SelectionMode="None" Margin="20,0">
+            <CollectionView.EmptyView>
+                <Label Text="Ancora niente qui… aggiungi brani dalla Libreria o da Cerca." FontSize="13" FontFamily="JakartaMedium" TextColor="{DynamicResource SubTextColor}" HorizontalTextAlignment="Center" Margin="0,20"/>
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnDefinitions="*, 44" MinimumHeightRequest="64" Padding="0,8">
+                        <!-- Area che RIPRODUCE il brano -->
+                        <Grid Grid.Column="0" ColumnDefinitions="48, *, Auto" ColumnSpacing="12" BackgroundColor="Transparent">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnSongPlayClicked" CommandParameter="{Binding .}" />
+                            </Grid.GestureRecognizers>
+                            <Border WidthRequest="48" HeightRequest="48" StrokeShape="RoundRectangle 10" StrokeThickness="0" VerticalOptions="Center">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="{DynamicResource Hero1Color}" Offset="0" />
+                                        <GradientStop Color="{DynamicResource Hero2Color}" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Image Source="{Binding ThumbnailUrl}" Aspect="AspectFill" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="1">
+                                <Label Text="{Binding Title}" TextColor="{DynamicResource TextColor}" FontFamily="JakartaBold" FontSize="15" MaxLines="1" LineBreakMode="TailTruncation" />
+                                <Label Text="{Binding Artist}" TextColor="{DynamicResource SubTextColor}" FontFamily="JakartaMedium" FontSize="13" MaxLines="1" LineBreakMode="TailTruncation" />
+                            </VerticalStackLayout>
+                            <Border Grid.Column="2" IsVisible="{Binding IsDownloaded, Converter={StaticResource NotConverter}}" HeightRequest="22" Padding="8,0" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{DynamicResource FieldBgColor}" VerticalOptions="Center">
+                                <Label Text="{loc:Tr Non scaricato}" FontSize="12" FontFamily="JakartaBold" TextColor="{DynamicResource SubTextColor}" VerticalOptions="Center" />
+                            </Border>
+                        </Grid>
+
+                        <!-- Altre azioni -->
+                        <Grid Grid.Column="1" BackgroundColor="Transparent" WidthRequest="44" HeightRequest="44" VerticalOptions="Center">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnSongOptionsClicked" CommandParameter="{Binding .}" />
+                            </Grid.GestureRecognizers>
+                            <Path Data="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                                  Fill="{DynamicResource SubTextColor}" Aspect="Uniform" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentView>

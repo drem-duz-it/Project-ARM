@@ -1,0 +1,71 @@
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ARMusic.Views.HomePage"
+             BackgroundColor="{DynamicResource BgColor}">
+
+    <!-- ARMusic · Scopri (ARM 2.5): ricerche recenti, le tue playlist, aggiunti di recente.
+         Il titolo "ARMusic" e il selettore Scopri/Cerca/Libreria stanno sopra, in MusicHubPage. -->
+    <ScrollView>
+        <VerticalStackLayout Padding="20,4,20,30" Spacing="22">
+
+            <!-- Vecchia intestazione: tenuta nascosta (il titolo ora è nel contenitore della sezione) -->
+            <Grid IsVisible="False">
+                <Label x:Name="GreetingLabel" />
+                <Label x:Name="ThemeLabel">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnThemeToggleClicked" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
+
+            <!-- 1. RICERCHE RECENTI (chip a scorrimento orizzontale: toccandole si cerca) -->
+            <VerticalStackLayout Spacing="10">
+                <Label Text="RICERCHE RECENTI" FontSize="11" FontFamily="JakartaExtraBold" CharacterSpacing="1.1" TextColor="{DynamicResource SubTextColor}"/>
+                <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never" Margin="-20,0" Padding="20,0">
+                    <HorizontalStackLayout x:Name="RecentSearchesContainer" Spacing="8" />
+                </ScrollView>
+            </VerticalStackLayout>
+
+            <!-- 2. LE TUE PLAYLIST (copertine 140, raggio 18) -->
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Le tue playlist" FontSize="20" FontFamily="JakartaExtraBold" CharacterSpacing="-0.2" TextColor="{DynamicResource TextColor}"/>
+                <Label x:Name="NoPlaylistsLabel" Text="Ancora niente qui… crea una playlist dalla Libreria o importala da Spotify." FontSize="13" FontFamily="JakartaMedium" TextColor="{DynamicResource SubTextColor}" IsVisible="False"/>
+                <CollectionView x:Name="HomePlaylistsCollection" HeightRequest="190" SelectionMode="Single" SelectionChanged="OnPlaylistSelected" Margin="-20,0">
+                    <CollectionView.Header>
+                        <BoxView WidthRequest="8" Color="Transparent" />
+                    </CollectionView.Header>
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="12" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <VerticalStackLayout WidthRequest="140" Spacing="8">
+                                <Border StrokeShape="RoundRectangle 18" StrokeThickness="0" WidthRequest="140" HeightRequest="140">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="{DynamicResource Hero1Color}" Offset="0" />
+                                            <GradientStop Color="{DynamicResource Hero2Color}" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <Grid>
+                                        <Ellipse Fill="White" Opacity="0.28" WidthRequest="90" HeightRequest="90" HorizontalOptions="End" VerticalOptions="Start" Margin="0,-24,-24,0" />
+                                        <Ellipse Fill="Black" Opacity="0.16" WidthRequest="60" HeightRequest="60" HorizontalOptions="Start" VerticalOptions="End" Margin="18,0,0,18" />
+                                        <Image Source="{Binding CoverSource}" Aspect="AspectFill" />
+                                    </Grid>
+                                </Border>
+                                <Label Text="{Binding Name}" TextColor="{DynamicResource TextColor}" FontFamily="JakartaBold" FontSize="14" LineBreakMode="TailTruncation" MaxLines="1" />
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+
+            <!-- 3. AGGIUNTI DI RECENTE (righe da 64) -->
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Aggiunti di recente" FontSize="20" FontFamily="JakartaExtraBold" CharacterSpacing="-0.2" TextColor="{DynamicResource TextColor}"/>
+                <VerticalStackLayout x:Name="RecentSongsContainer" Spacing="0" />
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentView>
