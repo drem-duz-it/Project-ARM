@@ -28,6 +28,5 @@ secrets*
 
 # Varie
 .tmp/
-.claude/
 Thumbs.db
 .DS_Store
