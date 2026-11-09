@@ -7,13 +7,13 @@ I temi di ARM sono file XAML che contengono soltanto **colori e qualche numero**
 | Nome nell'app | Classe | File | Carattere |
 |---|---|---|---|
 | Chiaro (predefinito) | `LightTheme` | `ARM/Themes/LightTheme.xaml` | bianco e grigi |
-| Classico | `SpotifyTheme` | `ARM/Themes/SpotifyTheme.xaml` | scuro neutro |
+| Classico | `ClassicTheme` | `ARM/Themes/ClassicTheme.xaml` | scuro neutro |
 
 Il tema si sceglie in **Impostazioni → Tema** (le voci vengono dall'elenco `ThemeService.Temi`); la scelta è salvata nelle preferenze (`AppTheme`).
 
 ## Le chiavi da definire
 
-Ogni tema deve definire **tutte** queste chiavi (stessi nomi, stessi tipi): una chiave mancante fa comparire un grigio di ripiego o un errore a runtime. Il modo più sicuro è copiare `LightTheme.xaml` o `SpotifyTheme.xaml` e cambiare i valori.
+Ogni tema deve definire **tutte** queste chiavi (stessi nomi, stessi tipi): una chiave mancante fa comparire un grigio di ripiego o un errore a runtime. Il modo più sicuro è copiare `LightTheme.xaml` o `ClassicTheme.xaml` e cambiare i valori.
 
 | Gruppo | Chiavi | Significato |
 |---|---|---|
