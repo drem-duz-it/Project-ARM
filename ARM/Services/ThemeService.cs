@@ -36,7 +36,7 @@ public static class ThemeService
         dizionari.Clear();
         dizionari.Add(tema switch
         {
-            "Classico" => new Themes.SpotifyTheme(),
+            "Classico" => new Themes.ClassicTheme(),
             _ => new Themes.LightTheme()
         });
 

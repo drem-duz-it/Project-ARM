@@ -7,13 +7,13 @@ ARM themes are XAML files that contain only **colors and a few numbers**. The ap
 | Name in the app | Class | File | Character |
 |---|---|---|---|
 | Chiaro (default) | `LightTheme` | `ARM/Themes/LightTheme.xaml` | white and greys |
-| Classico | `SpotifyTheme` | `ARM/Themes/SpotifyTheme.xaml` | neutral dark |
+| Classico | `ClassicTheme` | `ARM/Themes/ClassicTheme.xaml` | neutral dark |
 
 The theme is chosen in **Settings → Theme** (the entries come from the `ThemeService.Temi` list); the choice is saved in the preferences (`AppTheme`).
 
 ## Keys to define
 
-Every theme must define **all** of these keys (same names, same types): a missing key shows a fallback grey or a runtime error. The safest way is to copy `LightTheme.xaml` or `SpotifyTheme.xaml` and change the values.
+Every theme must define **all** of these keys (same names, same types): a missing key shows a fallback grey or a runtime error. The safest way is to copy `LightTheme.xaml` or `ClassicTheme.xaml` and change the values.
 
 | Group | Keys | Meaning |
 |---|---|---|
