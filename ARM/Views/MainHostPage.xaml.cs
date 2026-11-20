@@ -228,7 +228,7 @@ public partial class MainHostPage : ContentPage
             MiniPlayer.IsVisible = true;
             MiniTitle.Text = song.Title;
             MiniArtist.Text = song.Artist;
-            MiniCover.Source = string.IsNullOrEmpty(song.ThumbnailUrl) ? null : song.ThumbnailUrl;
+            MiniCover.Source = string.IsNullOrEmpty(song.CoverSmall) ? null : song.CoverSmall;
             MiniFill.WidthRequest = 0;
             AggiornaIconaMini(_audioService.IsPlaying);
         });

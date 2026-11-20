@@ -14,10 +14,16 @@ namespace ARM.Models
         // Sincronizzazione: quando è stato modificato su QUESTO dispositivo (tick UTC, 0 = arrivato da un altro dispositivo)
         public long ChangedAt { get; set; }
 
-        // Immagine da mostrare: letta direttamente dal file (su Windows le immagini con percorso completo non si caricano)
+        // Immagine da mostrare: la versione ridotta della copertina (vedi CoverThumbnails), letta direttamente dal file
+        // (su Windows le immagini con percorso completo non si caricano)
         [Ignore, System.Text.Json.Serialization.JsonIgnore]
-        public ImageSource CoverSource => string.IsNullOrEmpty(ImagePath) || !File.Exists(ImagePath)
-            ? null
-            : ImageSource.FromStream(() => File.OpenRead(ImagePath));
+        public ImageSource CoverSource
+        {
+            get
+            {
+                var path = ARM.Services.CoverThumbnails.Get(ImagePath);
+                return path == null ? null : ImageSource.FromStream(() => File.OpenRead(path));
+            }
+        }
     }
 }

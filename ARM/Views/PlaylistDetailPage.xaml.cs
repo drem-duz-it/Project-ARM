@@ -33,9 +33,10 @@ public partial class PlaylistDetailPage : ContentView
     private async void CaricaBrani()
     {
         var songs = await _databaseService.GetSongsForPlaylistAsync(_playlist.Id);
+        // Il controllo dei file su disco si fa fuori dal thread grafico
+        int mancanti = await Task.Run(() => songs.Count(s => !s.IsDownloaded || !File.Exists(s.LocalFilePath)));
         PlaylistSongsList.ItemsSource = songs;
 
-        int mancanti = songs.Count(s => !s.IsDownloaded || !File.Exists(s.LocalFilePath));
         MissingButton.IsVisible = mancanti > 0;
         MissingLabel.Text = mancanti == 1 ? Loc.T("Scarica 1 brano mancante") : Loc.F("Scarica i {0} brani mancanti", mancanti);
     }

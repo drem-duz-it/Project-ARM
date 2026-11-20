@@ -573,7 +573,7 @@ public class TodayPage : ContentView
 
         // Copertina 72 + titoli
         var top = new Grid { ColumnDefinitions = new ColumnDefinitionCollection(new ColumnDefinition(72), new ColumnDefinition(GridLength.Star)), ColumnSpacing = 16 };
-        top.Add(Copertina(song?.ThumbnailUrl, 72));
+        top.Add(Copertina(song?.CoverSmall, 72));
         var titoli = new VerticalStackLayout { Spacing = 2, VerticalOptions = LayoutOptions.Center };
         titoli.Add(new Label { Text = song == null ? Loc.T("Niente in riproduzione") : _audio.IsPlaying ? Loc.T("In riproduzione") : Loc.T("In pausa"), FontSize = 12, FontFamily = Ui.FontSemi, TextColor = Ui.C(song != null && _audio.IsPlaying ? "AccentColor" : "SubTextColor") });
         titoli.Add(new Label { Text = song?.Title ?? Loc.T("Scegli una playlist"), FontSize = 16, FontFamily = Ui.FontBold, TextColor = Ui.C("TextColor"), MaxLines = 1, LineBreakMode = LineBreakMode.TailTruncation });

@@ -102,7 +102,7 @@
                                         <GradientStop Color="{DynamicResource Hero2Color}" Offset="1" />
                                     </LinearGradientBrush>
                                 </Border.Background>
-                                <Image Source="{Binding ThumbnailUrl}" Aspect="AspectFill" />
+                                <Image Source="{Binding CoverSmall}" Aspect="AspectFill" />
                             </Border>
                             <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="1">
                                 <Label Text="{Binding Title}" TextColor="{DynamicResource TextColor}" FontFamily="JakartaBold" FontSize="15" MaxLines="1" LineBreakMode="TailTruncation" />

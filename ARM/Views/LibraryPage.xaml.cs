@@ -23,6 +23,7 @@ public partial class LibraryPage : ContentView
     {
         // 1. Carica le Playlist create
         var playlists = await _databaseService.GetAllPlaylistsAsync();
+        await CoverThumbnails.PrepareAsync(playlists.Select(p => p.ImagePath));
         PlaylistsCollection.ItemsSource = playlists;
         PlaylistsCollection.IsVisible = playlists.Count > 0;
         NoPlaylistsLabel.IsVisible = playlists.Count == 0;

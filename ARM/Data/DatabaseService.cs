@@ -238,27 +238,11 @@ namespace ARM.Data
         }
 
         // Recupera tutti i brani contenuti in una playlist
-        public async Task<List<Song>> GetSongsForPlaylistAsync(string playlistId)
-        {
-            // Cerca tutti i collegamenti per l'ID della playlist
-            var links = await _database.Table<PlaylistSong>()
-                                     .Where(ps => ps.PlaylistId == playlistId)
-                                     .ToListAsync();
-
-            var songs = new List<Song>();
-            foreach (var link in links)
-            {
-                // Recupera i dettagli di ogni singolo brano
-                var song = await _database.Table<Song>()
-                                 .Where(s => s.Id == link.SongId)
-                                 .FirstOrDefaultAsync();
-                if (song != null)
-                {
-                    songs.Add(song);
-                }
-            }
-            return songs;
-        }
+        // Una sola query (prima: una per brano), nell'ordine in cui i brani sono stati aggiunti
+        public Task<List<Song>> GetSongsForPlaylistAsync(string playlistId) =>
+            _database.QueryAsync<Song>(
+                "SELECT s.* FROM Song s JOIN PlaylistSong ps ON ps.SongId = s.Id WHERE ps.PlaylistId = ? ORDER BY ps.Id",
+                playlistId);
 
         public async Task DeletePlaylistAsync(Playlist playlist)
         {

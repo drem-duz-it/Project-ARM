@@ -40,6 +40,7 @@ public partial class HomePage : ContentView
         // 1. Carica le Playlist
         var playlists = await _databaseService.GetAllPlaylistsAsync();
         playlists.Reverse(); // Le inverte per mostrare prima le ultime create/modificate
+        await CoverThumbnails.PrepareAsync(playlists.Select(p => p.ImagePath));
         HomePlaylistsCollection.ItemsSource = playlists;
         HomePlaylistsCollection.IsVisible = playlists.Count > 0;
         NoPlaylistsLabel.IsVisible = playlists.Count == 0;
@@ -110,7 +111,7 @@ public partial class HomePage : ContentView
             Padding = new Thickness(0, 8),
             BackgroundColor = Colors.Transparent
         };
-        grid.Add(Cover(song.ThumbnailUrl, 48, 10));
+        grid.Add(Cover(song.CoverSmall, 48, 10));
 
         var stack = new VerticalStackLayout { VerticalOptions = LayoutOptions.Center, Spacing = 1 };
         var t = Ui.Body(song.Title);

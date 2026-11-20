@@ -18,5 +18,13 @@ namespace ARM.Models
 
         [Ignore] // Dice a SQLite di NON salvare questo campo nel database, perché si calcola da solo
         public bool IsDownloaded => !string.IsNullOrEmpty(LocalFilePath);
+
+        // Miniatura piccola (320×180) per gli elenchi: ThumbnailUrl è la più grande di YouTube (fino a 1280×720)
+        // e scaricarla per un quadratino rallenta molto lo scorrimento. I brani nascono tutti da YouTube (Id = id del video).
+        [Ignore, System.Text.Json.Serialization.JsonIgnore]
+        public string CoverSmall => IsYouTubeId(Id) ? $"https://i.ytimg.com/vi/{Id}/mqdefault.jpg" : ThumbnailUrl;
+
+        private static bool IsYouTubeId(string id) =>
+            id != null && id.Length == 11 && id.All(c => char.IsAsciiLetterOrDigit(c) || c == '-' || c == '_');
     }
 }
