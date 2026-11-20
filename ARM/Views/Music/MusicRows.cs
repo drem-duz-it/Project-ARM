@@ -94,7 +94,7 @@ public class SongRow : Grid
         {
             ColumnDefinitions.Add(new ColumnDefinition(44));
             var a = act;
-            Add(MusicRows.Action(icon, () => { if (Song != null) a(Song); }, description), col++);
+            this.Add(MusicRows.Action(icon, () => { if (Song != null) a(Song); }, description), col++);
         }
 
         BindingContextChanged += (s, e) => Bind(BindingContext as Song);
@@ -160,7 +160,7 @@ public class PlaylistRow : Grid
         play.Add(Ui.Icon(Ui.Icons.Play, Ui.C("AccentColor"), 22));
         Ui.Press(play, () => { if (Playlist != null) onPlay(Playlist); }, 0.9);
         SemanticProperties.SetDescription(play, Loc.T("Riproduci"));
-        Add(play, 1);
+        this.Add(play, 1);
 
         BindingContextChanged += (s, e) => Bind(BindingContext as Playlist);
     }

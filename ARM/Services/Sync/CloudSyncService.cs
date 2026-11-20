@@ -318,7 +318,7 @@ public class CloudSyncService
         SetMaster(master);
         try
         {
-            using var del = await RequestAsync(HttpMethod.Delete, $"/rest/v1/pairing?user_id=eq.{UserId}");
+            using var del = await RequestAsync(HttpMethod.Delete, $"/rest/v1/pairing?user_id=eq.{UserId}", null);
             using var _ = await _http.SendAsync(del);
         }
         catch { /* scade da solo */ }

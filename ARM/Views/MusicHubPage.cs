@@ -43,7 +43,7 @@ public class MusicHubPage : ContentView
     private Label _songsCount;
     private Grid _searchView;
     private CollectionView _results;
-    private View _recentView;
+    private ContentView _recentView;
     private ActivityIndicator _spinner;
     private SongRowTracker _rows;
 
