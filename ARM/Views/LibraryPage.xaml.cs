@@ -106,9 +106,11 @@ public partial class LibraryPage : ContentView
                     var targetPlaylist = playlists.First(p => p.Name == chosen);
 
                     // Salviamo il collegamento nel database
-                    await _databaseService.AddSongToPlaylistAsync(targetPlaylist.Id, selectedSong.Id);
+                    bool aggiunto = await _databaseService.AddSongToPlaylistAsync(targetPlaylist.Id, selectedSong.Id);
 
-                    await Application.Current.MainPage.DisplayAlert(Loc.T("Fatto"), Loc.F("Brano aggiunto a {0}!", targetPlaylist.Name), Loc.T("OK"));
+                    await Application.Current.MainPage.DisplayAlert(Loc.T("Fatto"),
+                        aggiunto ? Loc.F("Brano aggiunto a {0}!", targetPlaylist.Name) : Loc.F("Il brano è già in {0}.", targetPlaylist.Name),
+                        Loc.T("OK"));
                 }
             }
         }

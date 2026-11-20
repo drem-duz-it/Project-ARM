@@ -589,5 +589,7 @@
  "▶ Riproduci Offline": "▶ Play offline",
  "\"{0}\" non è scaricato. Scaricalo per ascoltarlo.": "\"{0}\" isn't downloaded. Download it to listen to it.",
  "L'app è in italiano e in inglese: la lingua si sceglie nelle Impostazioni.": "The app is available in Italian and English: pick the language in Settings.",
- "La musica si ascolta solo dai brani scaricati: lo streaming è stato rimosso.": "Music plays only from downloaded songs: streaming has been removed."
+ "La musica si ascolta solo dai brani scaricati: lo streaming è stato rimosso.": "Music plays only from downloaded songs: streaming has been removed.",
+ "Il brano è già in {0}.": "The song is already in {0}.",
+ "YouTube non ha fornito l'audio di questo brano.": "YouTube did not provide the audio for this song."
 }

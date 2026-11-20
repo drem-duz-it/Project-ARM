@@ -33,6 +33,7 @@ namespace ARM
             builder.Services.AddSingleton<ARM.Data.DatabaseService>();
             builder.Services.AddSingleton<ARM.Services.ReminderService>();
             builder.Services.AddSingleton<ARM.Services.Sync.SyncService>();
+            builder.Services.AddSingleton<ARM.Services.MusicDownloads>();
             builder.Services.AddSingleton<ARM.Services.SpotifyService>();
             builder.Services.AddSingleton<ARM.Services.LyricsService>();
             builder.Services.AddSingleton<HttpClient>();

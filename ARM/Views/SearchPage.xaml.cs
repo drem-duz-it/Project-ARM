@@ -69,32 +69,43 @@ public partial class SearchPage : ContentView
         }
     }
 
-    // Metodo dedicato al download (con Task.Run per evitare il crash su Android)
-    private async Task ScaricaBranoAsync(Song song)
+    private MusicDownloads Downloads => IPlatformApplication.Current.Services.GetService<MusicDownloads>();
+
+    // Scarica il brano nella libreria (in background, tramite la coda dei download)
+    private async Task ScaricaBranoAsync(Song risultato)
     {
-        try
+        var song = await _databaseService.AddOrGetSongAsync(risultato);
+        if (song.IsDownloaded && File.Exists(song.LocalFilePath))
         {
-            _ = Application.Current.MainPage.DisplayAlert(Loc.T("Download in corso"), Loc.F("Sto scaricando {0} in background...", song.Title), Loc.T("Capito"));
-
-            // Spostiamo il lavoro pesante sul thread secondario
-            await Task.Run(async () =>
-            {
-                // Scarica in una cartella temporanea, poi sposta il brano al suo posto
-                // (sul telefono: cartella Musica/ARM)
-                string tempPath = MusicStorage.TempPath(song.Id);
-
-                await _youTubeService.DownloadAudioAsync(song.Id, tempPath);
-
-                song.LocalFilePath = await MusicStorage.PublishAsync(tempPath, song);
-                await _databaseService.SaveSongAsync(song);
-            });
-
             await Application.Current.MainPage.DisplayAlert(Loc.T("Completato"), Loc.F("{0} aggiunto alla Libreria!", song.Title), Loc.T("OK"));
+            return;
         }
-        catch (Exception ex)
+
+        _ = Application.Current.MainPage.DisplayAlert(Loc.T("Download in corso"), Loc.F("Sto scaricando {0} in background...", song.Title), Loc.T("Capito"));
+        if (await Downloads.DownloadAsync(song))
+            await Application.Current.MainPage.DisplayAlert(Loc.T("Completato"), Loc.F("{0} aggiunto alla Libreria!", song.Title), Loc.T("OK"));
+        else
+            await Application.Current.MainPage.DisplayAlert(Loc.T("Errore"), Loc.T("Download fallito: ") + Downloads.LastError, Loc.T("OK"));
+    }
+
+    // Aggiunge il brano a una playlist: entra subito, il file si scarica in background
+    private async Task AggiungiAPlaylistAsync(Song risultato)
+    {
+        var playlists = await _databaseService.GetAllPlaylistsAsync();
+        if (playlists.Count == 0)
         {
-            await Application.Current.MainPage.DisplayAlert(Loc.T("Errore"), Loc.T("Download fallito: ") + YouTubeService.SpiegaErrore(ex), Loc.T("OK"));
+            await Application.Current.MainPage.DisplayAlert(Loc.T("Ops"), Loc.T("Non hai ancora creato nessuna playlist!"), Loc.T("OK"));
+            return;
         }
+
+        string scelta = await Application.Current.MainPage.DisplayActionSheet(Loc.T("Scegli la Playlist"), Loc.T("Annulla"), null, playlists.Select(p => p.Name).ToArray());
+        var playlist = playlists.FirstOrDefault(p => p.Name == scelta);
+        if (playlist == null) return;
+
+        bool aggiunto = await Downloads.AddToPlaylistAsync(risultato, playlist.Id);
+        await Application.Current.MainPage.DisplayAlert(Loc.T("Fatto"),
+            aggiunto ? Loc.F("Brano aggiunto a {0}!", playlist.Name) : Loc.F("Il brano è già in {0}.", playlist.Name),
+            Loc.T("OK"));
     }
 
     private async void OnSongSelected(object sender, SelectionChangedEventArgs e)
@@ -104,27 +115,16 @@ public partial class SearchPage : ContentView
             SearchResultsList.SelectedItem = null;
 
             string action = await Application.Current.MainPage.DisplayActionSheet(
-            Loc.F("Opzioni: {0}", selectedSong.Title),
-            Loc.T("Annulla"),
-            null,
-            Loc.T("Scarica offline"),
-            Loc.T("Aggiungi a una playlist"));
+                Loc.F("Opzioni: {0}", selectedSong.Title),
+                Loc.T("Annulla"),
+                null,
+                Loc.T("Scarica offline"),
+                Loc.T("Aggiungi a una playlist"));
 
             if (action == Loc.T("Scarica offline"))
-            {
-                // Richiama il metodo pulito che gestisce tutto il processo in background
                 await ScaricaBranoAsync(selectedSong);
-            }
             else if (action == Loc.T("Aggiungi a una playlist"))
-            {
-                // Mostra il messaggio con il punto e virgola corretto e blocca l'operazione
-                await Application.Current.MainPage.DisplayAlert(
-                    Loc.T("Download Richiesto"),
-                    Loc.T("Per garantire una riproduzione continua e senza interruzioni, puoi aggiungere alle playlist solo i brani scaricati offline. Clicca su 'Scarica Offline' prima di aggiungerlo!"),
-                    Loc.T("Capito"));
-
-                return;
-            }
+                await AggiungiAPlaylistAsync(selectedSong);
         }
     }
 }

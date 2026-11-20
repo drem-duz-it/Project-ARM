@@ -173,6 +173,18 @@ namespace ARM.Data
             return Changed(_database.InsertOrReplaceAsync(song));
         }
 
+        public Task<Song> GetSongAsync(string songId) => _database.FindAsync<Song>(songId);
+
+        // Brano da un risultato di ricerca: se è già in libreria si usa quello salvato
+        // (non va sovrascritto: perderebbe il file scaricato e titolo/artista modificati)
+        public async Task<Song> AddOrGetSongAsync(Song song)
+        {
+            var esistente = await GetSongAsync(song.Id);
+            if (esistente != null) return esistente;
+            await SaveSongAsync(song);
+            return song;
+        }
+
         // Esempio: Metodo per prendere tutte le canzoni
         public async Task<List<Song>> GetAllSongsAsync()
         {
@@ -225,16 +237,22 @@ namespace ARM.Data
             return await _database.Table<Playlist>().ToListAsync();
         }
 
-        // Associa un brano a una playlist specifica
-        public Task AddSongToPlaylistAsync(string playlistId, string songId)
+        // Associa un brano a una playlist specifica. false = c'era già (niente doppioni)
+        public async Task<bool> AddSongToPlaylistAsync(string playlistId, string songId)
         {
+            int presenti = await _database.Table<PlaylistSong>()
+                                          .Where(x => x.PlaylistId == playlistId && x.SongId == songId)
+                                          .CountAsync();
+            if (presenti > 0) return false;
+
             var playlistSong = new PlaylistSong
             {
                 PlaylistId = playlistId,
                 SongId = songId,
                 ChangedAt = Now
             };
-            return Changed(_database.InsertAsync(playlistSong));
+            await Changed(_database.InsertAsync(playlistSong));
+            return true;
         }
 
         // Recupera tutti i brani contenuti in una playlist

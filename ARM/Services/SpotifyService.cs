@@ -30,10 +30,13 @@ public class SpotifyService
     private string _token;
     private DateTime _tokenExpires;
 
-    public SpotifyService(DatabaseService db, YouTubeService youtube)
+    private readonly MusicDownloads _downloads;
+
+    public SpotifyService(DatabaseService db, YouTubeService youtube, MusicDownloads downloads)
     {
         _db = db;
         _youtube = youtube;
+        _downloads = downloads;
     }
 
     // ---------- Credenziali ----------
@@ -197,26 +200,9 @@ public class SpotifyService
         return (ok, failed);
     }
 
-    public string LastDownloadError { get; private set; }
+    public string LastDownloadError => _downloads.LastError;
 
-    private async Task<bool> ScaricaAsync(Song song)
-    {
-        try
-        {
-            var temp = MusicStorage.TempPath(song.Id);
-            await _youtube.DownloadAudioAsync(song.Id, temp);
-            if (!File.Exists(temp)) return false;
-            var path = await MusicStorage.PublishAsync(temp, song);
-            await _db.SetSongFileAsync(song.Id, path);
-            song.LocalFilePath = path;
-            return true;
-        }
-        catch (Exception ex)
-        {
-            LastDownloadError = YouTubeService.SpiegaErrore(ex);
-            return false;
-        }
-    }
+    private Task<bool> ScaricaAsync(Song song) => _downloads.DownloadAsync(song);
 
     private static Song TrovaInLibreria(List<Song> library, SpotifyTrack track)
     {
