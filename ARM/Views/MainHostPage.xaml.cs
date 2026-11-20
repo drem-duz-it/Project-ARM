@@ -54,11 +54,8 @@ public partial class MainHostPage : ContentPage
         _tasksPage = new TasksPage(dbService);
         _calendarPage = new CalendarPage(dbService);
 
-        // Musica (pagine esistenti raccolte in un'unica sezione)
-        var homePage = new HomePage(dbService, audioService, ytService);
-        var searchPage = new SearchPage(_youTubeService, _audioService, dbService, httpClient);
-        var libraryPage = new LibraryPage(dbService, audioService, ytService);
-        _musicPage = new MusicHubPage(homePage, searchPage, libraryPage);
+        // Musica: ricerca, playlist e brani in un'unica sezione
+        _musicPage = new MusicHubPage(dbService, audioService, ytService);
 
         ThemeService.ThemeChanged += () => { IconeMiniPlayer(); ApriTab(_tabAttivo); };
         Loc.LanguageChanged += () => { IconeMiniPlayer(); ApriTab(_tabAttivo); ChangelogScroll.Content = Novita.Build(); };
@@ -315,7 +312,7 @@ public partial class MainHostPage : ContentPage
             return true;
         }
 
-        // 2. Se siamo dentro una playlist, andiamo indietro
+        // 2. Musica: chiude la playlist aperta o la ricerca
         if (PageHost.Content == _musicPage && _musicPage.HandleBack())
             return true;
 

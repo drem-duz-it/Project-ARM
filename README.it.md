@@ -53,7 +53,7 @@ Apri le **Impostazioni** con l'icona a cursori in cima a *Oggi*. Qui scegli **li
 
 | Funzione | Cosa serve | Dove si inserisce |
 |---|---|---|
-| Import da Spotify | un *Client ID* e un *Client Secret*: crea gratis un'app su [developer.spotify.com/dashboard](https://developer.spotify.com/dashboard) (Redirect URI `https://localhost`, spunta «Web API») | **Impostazioni → Credenziali Spotify** (oppure Musica → Libreria → Spotify) |
+| Import da Spotify | un *Client ID* e un *Client Secret*: crea gratis un'app su [developer.spotify.com/dashboard](https://developer.spotify.com/dashboard) (Redirect URI `https://localhost`, spunta «Web API») | **Impostazioni → Credenziali Spotify** (oppure Musica → Playlist → Importa) |
 | Ordini Amazon da Gmail | il tuo indirizzo Gmail e una **password per le app** (non la password di Google): [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords), richiede la verifica in due passaggi | **Impostazioni → Ordini da Gmail** (solo Windows). La password è cifrata con DPAPI, legata al tuo utente Windows |
 | Sincronizzazione PC ↔ telefono | PC e telefono sulla stessa rete Wi-Fi | **Impostazioni → Sincronizzazione**: sul PC compare un codice, sul telefono lo inserisci. Porte: TCP 47800, UDP 47801 |
 

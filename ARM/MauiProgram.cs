@@ -41,7 +41,6 @@ namespace ARM
             builder.Services.AddSingleton<App>();
             builder.Services.AddSingleton<ARM.Views.MainHostPage>();
 
-            builder.Services.AddTransient<ARM.Views.SearchPage>();
             builder.Services.AddTransient<ARM.Views.PlayerPage>();
 
             // --- LOGGING (Solo in Debug) ---

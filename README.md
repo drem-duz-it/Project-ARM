@@ -53,7 +53,7 @@ Open **Settings** with the sliders icon at the top of *Today*. There you can cho
 
 | Feature | What you need | Where to enter it |
 |---|---|---|
-| Spotify import | a *Client ID* and *Client Secret*: create a free app at [developer.spotify.com/dashboard](https://developer.spotify.com/dashboard) (Redirect URI `https://localhost`, tick "Web API") | **Settings → Spotify credentials** (or Music → Library → Spotify) |
+| Spotify import | a *Client ID* and *Client Secret*: create a free app at [developer.spotify.com/dashboard](https://developer.spotify.com/dashboard) (Redirect URI `https://localhost`, tick "Web API") | **Settings → Spotify credentials** (or Music → Playlists → Import) |
 | Amazon orders from Gmail | your Gmail address and an **app password** (not your Google password): [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords), requires 2-step verification | **Settings → Orders from Gmail** (Windows only). The password is encrypted with DPAPI, tied to your Windows user |
 | PC ↔ phone sync | PC and phone on the same Wi-Fi network | **Settings → Sync**: the PC shows a code, you type it on the phone. Ports: TCP 47800, UDP 47801 |
 

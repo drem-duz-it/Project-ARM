@@ -237,6 +237,25 @@ namespace ARM.Data
             return await _database.Table<Playlist>().ToListAsync();
         }
 
+        public Task<Playlist> GetPlaylistAsync(string playlistId) => _database.FindAsync<Playlist>(playlistId);
+
+        // Numero di brani di ogni playlist, con una sola query (id playlist → brani)
+        public async Task<Dictionary<string, int>> GetPlaylistCountsAsync()
+        {
+            var rows = await _database.QueryAsync<PlaylistCount>("SELECT PlaylistId, COUNT(*) AS Count FROM PlaylistSong GROUP BY PlaylistId");
+            return rows.Where(r => r.PlaylistId != null).ToDictionary(r => r.PlaylistId, r => r.Count);
+        }
+
+        public class PlaylistCount
+        {
+            public string PlaylistId { get; set; }
+            public int Count { get; set; }
+        }
+
+        // Brani scaricati, dal più recente
+        public Task<List<Song>> GetDownloadedSongsAsync() =>
+            _database.QueryAsync<Song>("SELECT * FROM Song WHERE LocalFilePath IS NOT NULL AND LocalFilePath <> '' ORDER BY rowid DESC");
+
         // Associa un brano a una playlist specifica. false = c'era già (niente doppioni)
         public async Task<bool> AddSongToPlaylistAsync(string playlistId, string songId)
         {
