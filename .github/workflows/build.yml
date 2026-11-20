@@ -1,0 +1,60 @@
+# Compila ARM per Android (APK) e Windows (cartella zip) e allega i file all'esecuzione.
+# I file si scaricano dalla scheda Actions → esecuzione → "Artifacts".
+name: Build
+
+on:
+  push:
+    branches: [main, "claude/**"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: microsoft
+          java-version: 17
+
+      - name: Workload MAUI
+        run: dotnet workload install maui-android maui-windows
+
+      - name: Test del parser Amazon
+        run: dotnet run --project tools/TestParserAmazon
+
+      # APK firmato con la chiave di debug: si installa a mano sul telefono
+      - name: Android (APK)
+        run: >
+          dotnet publish ARM/ARM.csproj -f net10.0-android -c Release
+          -p:AndroidPackageFormat=apk
+          -o out/android
+
+      # Windows: eseguibile autonomo (non serve installare .NET né il Windows App SDK)
+      - name: Windows
+        run: >
+          dotnet publish ARM/ARM.csproj -f net10.0-windows10.0.19041.0 -c Release
+          -p:RuntimeIdentifierOverride=win-x64
+          -p:WindowsPackageType=None
+          -p:WindowsAppSDKSelfContained=true
+          -p:SelfContained=true
+          -o out/windows
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ARM-android-apk
+          path: out/android/*-Signed.apk
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ARM-windows
+          path: out/windows
+          if-no-files-found: error
