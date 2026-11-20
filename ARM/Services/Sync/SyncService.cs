@@ -39,10 +39,15 @@ public class SyncService
     public SyncService(DatabaseService db)
     {
         _db = db;
+        // Sincronizzazione cloud: quando è attiva su questo dispositivo sostituisce quella Wi-Fi
+        Cloud = new CloudSyncService(db);
+        Cloud.StatusChanged += () => StatusChanged?.Invoke();
+        Cloud.DataSynced += () => DataSynced?.Invoke();
+
         // Sul dispositivo Android: quando modifichi qualcosa, prova a sincronizzare dopo qualche secondo
         _db.DataChanged += () =>
         {
-            if (IsHost || !IsPaired || _lock.CurrentCount == 0) return;
+            if (IsCloud || IsHost || !IsPaired || _lock.CurrentCount == 0) return;
             _debounce?.Cancel();
             var cts = _debounce = new CancellationTokenSource();
             _ = Task.Delay(3000, cts.Token).ContinueWith(t => { if (!t.IsCanceled) _ = SyncAsync(null); });
@@ -53,9 +58,14 @@ public class SyncService
     public event Action StatusChanged;   // testo di stato aggiornato
     public event Action DataSynced;      // dati cambiati o conflitti trovati: ridisegnare le pagine
 
-    public string Status { get; private set; } = "";
-    public bool IsBusy => _lock.CurrentCount == 0;
-    public int PendingConflicts { get; private set; }
+    public CloudSyncService Cloud { get; }
+    public bool IsCloud => Cloud.IsEnabled;
+
+    private string _status = "";
+    private int _pendingConflicts;
+    public string Status { get => IsCloud ? Cloud.Status : _status; private set => _status = value; }
+    public bool IsBusy => _lock.CurrentCount == 0 || Cloud.IsBusy;
+    public int PendingConflicts { get => IsCloud ? Cloud.PendingConflicts : _pendingConflicts; private set => _pendingConflicts = value; }
 
     public bool IsHost
     {
@@ -97,12 +107,15 @@ public class SyncService
 
     public string DeviceName => string.IsNullOrWhiteSpace(DeviceInfo.Name) ? (IsHost ? "PC" : "Dispositivo Android") : DeviceInfo.Name;
 
-    public bool IsPaired => IsHost ? DeviceIds.Count > 0 : Preferences.Default.Get(K("Token"), "") != "";
+    public bool IsPaired => IsCloud || (IsHost ? DeviceIds.Count > 0 : Preferences.Default.Get(K("Token"), "") != "");
+
+    // Abbinamento Wi-Fi (senza contare il cloud)
+    public bool IsWifiPaired => IsHost ? DeviceIds.Count > 0 : Preferences.Default.Get(K("Token"), "") != "";
 
     // Telefono: nome del PC. PC: nomi dei dispositivi associati.
-    public string PeerName => IsHost ? string.Join(", ", Devices.Select(d => d.Name)) : Preferences.Default.Get(K("PeerName"), "");
+    public string PeerName => IsCloud ? Loc.T("Cloud") : IsHost ? string.Join(", ", Devices.Select(d => d.Name)) : Preferences.Default.Get(K("PeerName"), "");
 
-    public DateTime? LastSync => IsHost ? Devices.Max(d => d.LastSync) : ReadTime(K("LastOk"));
+    public DateTime? LastSync => IsCloud ? Cloud.LastSync : IsHost ? Devices.Max(d => d.LastSync) : ReadTime(K("LastOk"));
 
     private static DateTime? ReadTime(string key)
     {
@@ -202,6 +215,11 @@ public class SyncService
     // ---------- Avvio ----------
     public void Start()
     {
+        if (IsCloud)
+        {
+            _ = Cloud.StartAsync();
+            return;
+        }
         if (IsHost)
         {
             MigrateSinglePeer();
@@ -221,6 +239,30 @@ public class SyncService
             _ = SyncAsync(null);
         }
         else SetStatus(Loc.T("Non associato a nessun PC"));
+    }
+
+    // App di nuovo in primo piano / in background
+    public void Resume()
+    {
+        if (IsCloud) Cloud.Resume();
+        else if (!IsHost) _ = SyncAsync(null);
+    }
+
+    public void Sleep()
+    {
+        if (IsCloud) Cloud.Sleep();
+    }
+
+    // Il cloud è appena stato attivato: la sincronizzazione Wi-Fi si ferma su questo dispositivo
+    public void StopWifi()
+    {
+        try { _listener?.Stop(); } catch { }
+        _listener = null;
+        try { _discovery?.Dispose(); } catch { }
+        _discovery = null;
+        _timer?.Stop();
+        _timer = null;
+        RaiseDataSynced();
     }
 
     // ================= PC (base) =================
@@ -533,6 +575,7 @@ public class SyncService
     // Senza resolver (sincronizzazione automatica) i conflitti fermano tutto e vengono segnalati.
     public async Task SyncAsync(Func<List<SyncConflict>, Task<bool>> resolver)
     {
+        if (IsCloud) { await Cloud.SyncAsync(resolver); return; }
         if (IsHost || !IsPaired) return;
         if (!await _lock.WaitAsync(0)) return;
         try

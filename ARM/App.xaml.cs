@@ -55,10 +55,12 @@ public partial class App : Application
     protected override void OnResume()
     {
         _ = _reminders.RescheduleAsync();
-        if (!_sync.IsHost) _ = _sync.SyncAsync(null);
+        _sync.Resume();
         // Riaprendo l'app i pulsanti della musica mostrano lo stato reale (sta suonando o no)
         _audio.RefreshPlaybackState();
     }
+
+    protected override void OnSleep() => _sync.Sleep();
 
     private async void RichiediPermessiNotifiche()
     {

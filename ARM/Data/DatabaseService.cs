@@ -19,6 +19,7 @@ namespace ARM.Data
             if (!string.IsNullOrEmpty(dbDiProva)) dbPath = dbDiProva;
 #endif
 
+            DbPath = dbPath;
             _database = new SQLiteAsyncConnection(dbPath);
 
             // Inizializza il file creando le tabelle se è la prima volta che apri l'app
@@ -34,6 +35,7 @@ namespace ARM.Data
 
             // Elementi eliminati, da comunicare all'altro dispositivo
             _database.CreateTableAsync<SyncTombstone>().Wait();
+            _database.CreateTableAsync<CloudState>().Wait();     // sincronizzazione cloud: versioni note del server
 
             // Copertine create prima della 2.1.1: assegna loro un id per poterle sincronizzare
             Task.Run(AssegnaIdCopertineAsync).Wait();   // Task.Run: evita il blocco del thread grafico
@@ -41,6 +43,28 @@ namespace ARM.Data
 
         // Avvisa chi è interessato (notifiche, sincronizzazione) che i dati sono cambiati
         public event Action DataChanged;
+
+        public string DbPath { get; }
+
+        // ---------- Sincronizzazione cloud ----------
+        public async Task<Dictionary<string, long>> GetCloudVersionsAsync() =>
+            (await _database.Table<CloudState>().ToListAsync()).ToDictionary(c => c.Key, c => c.Version);
+
+        public Task SetCloudVersionsAsync(IEnumerable<KeyValuePair<string, long>> versions) =>
+            _database.RunInTransactionAsync(conn =>
+            {
+                foreach (var v in versions) conn.InsertOrReplace(new CloudState { Key = v.Key, Version = v.Value });
+            });
+
+        public Task ClearCloudVersionsAsync() => _database.DeleteAllAsync<CloudState>();
+
+        // Copia del database prima di attivare il cloud (per poter tornare indietro)
+        public async Task<string> BackupAsync(string suffix)
+        {
+            var dest = Path.Combine(FileSystem.AppDataDirectory, $"armusic-{suffix}-{DateTime.Now:yyyyMMdd-HHmmss}.db3");
+            await _database.ExecuteAsync("VACUUM INTO ?", dest);
+            return dest;
+        }
 
         // Istante "adesso" usato per segnare le modifiche locali (tick UTC)
         public static long Now => DateTime.UtcNow.Ticks;

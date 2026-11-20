@@ -11,6 +11,7 @@ ARM is an all-in-one everyday app: **notes, tasks, calendar, payments, Amazon or
 - **Amazon orders** (Windows only): reads Amazon emails from Gmail (IMAP, read-only) and shows status and expected delivery. *(The email parser understands Italian Amazon emails only.)*
 - **Music**: playlists, search, downloaded songs, synced lyrics (LRCLIB), import of public Spotify playlists.
 - **Wi-Fi sync** PC ↔ phone, paired with a code over an encrypted channel; no external server.
+- **Cloud sync** (optional) on every device, anywhere, through your own Supabase project: data is end-to-end encrypted on the device, songs are downloaded by each device from YouTube.
 - **Themes** Light ("Chiaro") and Classic ("Classico", dark); on a wide Windows window the tabs become a sidebar.
 - **Languages**: English and Italian, switchable from Settings.
 - **Optional local API** (Windows only, `127.0.0.1` only, key-protected) to connect an external assistant.
@@ -56,6 +57,7 @@ Open **Settings** with the sliders icon at the top of *Today*. There you can cho
 | Spotify import | a *Client ID* and *Client Secret*: create a free app at [developer.spotify.com/dashboard](https://developer.spotify.com/dashboard) (Redirect URI `https://localhost`, tick "Web API") | **Settings → Spotify credentials** (or Music → Playlists → Import) |
 | Amazon orders from Gmail | your Gmail address and an **app password** (not your Google password): [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords), requires 2-step verification | **Settings → Orders from Gmail** (Windows only). The password is encrypted with DPAPI, tied to your Windows user |
 | PC ↔ phone sync | PC and phone on the same Wi-Fi network | **Settings → Sync**: the PC shows a code, you type it on the phone. Ports: TCP 47800, UDP 47801 |
+| Cloud sync | a free [Supabase](https://supabase.com) project: run `supabase/migrations/*.sql` in its SQL editor, add your user under Authentication and turn off public sign-ups | **Settings → Sync**: project URL, *publishable* key, email and password. The first device creates the encryption key, the others pair with a code |
 
 Optional environment variables (Windows only, for the local API): `ARM_AGENT_PORT` (port, default 47810) and `ARM_AGENT_FILE` (path of the JSON file holding port and key, default `%LOCALAPPDATA%\ARM\arm-api.json`). The API listens on `127.0.0.1` only and every request must carry the `X-Arm-Key` header.
 

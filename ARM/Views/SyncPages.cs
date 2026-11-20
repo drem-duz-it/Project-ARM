@@ -36,6 +36,13 @@ public abstract class SheetPage : ContentPage
     protected static Border SecondaryButton(string text, Action onTap, string colorKey = "AccentColor") => Ui.Button(text, onTap, ghost: true, colorKey: colorKey == "SubTextColor" ? "TextColor" : colorKey);
 }
 
+// Quale pagina aprire: la Wi-Fi solo per chi la usa ancora (e non ha attivato il cloud)
+public static class SyncPages
+{
+    public static ContentPage For(SyncService sync) =>
+        !sync.IsCloud && sync.IsWifiPaired ? new SyncPage(sync) : new CloudSyncPage(sync);
+}
+
 // ================= SINCRONIZZAZIONE =================
 public class SyncPage : SheetPage
 {
@@ -83,6 +90,9 @@ public class SyncPage : SheetPage
         _status.Text = _sync.Status;
         Body.Add(_status);
         Body.Add(InfoCard());
+
+        // Passaggio alla sincronizzazione via Internet
+        Body.Add(SecondaryButton(Loc.T("Sincronizzazione cloud (ovunque)"), () => Navigation.PushModalAsync(new CloudSyncPage(_sync))));
     }
 
     // Riga informativa su fondo FieldBg

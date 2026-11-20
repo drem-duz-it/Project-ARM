@@ -31,6 +31,9 @@ public class SyncMessage
 [JsonSerializable(typeof(Ordine))]
 [JsonSerializable(typeof(Playlist))]
 [JsonSerializable(typeof(Song))]
+[JsonSerializable(typeof(PlaylistSong))]
+[JsonSerializable(typeof(SyncTombstone))]
+[JsonSerializable(typeof(CloudEnvelope))]
 public partial class SyncJson : JsonSerializerContext { }
 
 // Canale TCP cifrato: ogni pacchetto è [lunghezza][IV | dati cifrati AES-CBC | HMAC-SHA256]

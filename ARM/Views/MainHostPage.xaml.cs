@@ -204,14 +204,15 @@ public partial class MainHostPage : ContentPage
         } });
         if (_sync.IsPaired)
         {
-            var nomi = _sync.IsHost ? new[] { _sync.DeviceName }.Concat(_sync.Devices.Select(d => d.Name)) : new[] { _sync.DeviceName, _sync.PeerName };
+            var nomi = _sync.IsCloud ? new[] { _sync.DeviceName, _sync.PeerName }
+                     : _sync.IsHost ? new[] { _sync.DeviceName }.Concat(_sync.Devices.Select(d => d.Name)) : new[] { _sync.DeviceName, _sync.PeerName };
             box.Add(Ui.Small(string.Join(" · ", nomi.Where(x => !string.IsNullOrWhiteSpace(x)))));
             if (_sync.LastSync is DateTime t) box.Add(Ui.Small(Loc.T("Ultimo allineamento ") + t.ToString(t.Date == DateTime.Today ? "HH:mm" : "d MMM HH:mm", Ui.It)));
             if (_sync.PendingConflicts > 0) box.Add(Ui.Small(_sync.PendingConflicts == 1 ? Loc.T("1 conflitto da risolvere") : Loc.F("{0} conflitti da risolvere", _sync.PendingConflicts), "TextColor"));
         }
         else box.Add(Ui.Small(Loc.T("Tocca per abbinare telefono e tablet")));
         var syncCard = new Border { Padding = new Thickness(12), Stroke = new SolidColorBrush(Ui.C("BorderColor")), StrokeThickness = 1, StrokeShape = new RoundRectangle { CornerRadius = 10 }, BackgroundColor = Colors.Transparent, Content = box };
-        Ui.OnTap(syncCard, () => Navigation.PushModalAsync(new SyncPage(_sync)));
+        Ui.OnTap(syncCard, () => Navigation.PushModalAsync(SyncPages.For(_sync)));
         SideContent.Add(syncCard, 0, 4);
     }
 

@@ -11,6 +11,7 @@ ARM è un'app di tutti i giorni in uno: **note, task, calendario, pagamenti, ord
 - **Ordini Amazon** (solo Windows): legge da Gmail (IMAP, sola lettura) le email di Amazon e mostra stato e consegna prevista. *(Il parser capisce solo le email Amazon in italiano.)*
 - **Musica**: playlist, ricerca, brani scaricati, testi sincronizzati (LRCLIB), import di playlist pubbliche da Spotify.
 - **Sincronizzazione Wi-Fi** PC ↔ telefono con abbinamento tramite codice e canale cifrato; nessun server esterno.
+- **Sincronizzazione cloud** (facoltativa) su tutti i dispositivi, ovunque, tramite un tuo progetto Supabase: i dati sono cifrati sul dispositivo, i brani li scarica ogni dispositivo da YouTube.
 - **Temi** Chiaro e Classico (scuro); su Windows, a finestra larga, i tab diventano una barra laterale.
 - **Lingue**: italiano e inglese, selezionabili dalle Impostazioni.
 - **API locale opzionale** (solo Windows, solo `127.0.0.1`, protetta da chiave) per collegare un assistente esterno.
@@ -56,6 +57,7 @@ Apri le **Impostazioni** con l'icona a cursori in cima a *Oggi*. Qui scegli **li
 | Import da Spotify | un *Client ID* e un *Client Secret*: crea gratis un'app su [developer.spotify.com/dashboard](https://developer.spotify.com/dashboard) (Redirect URI `https://localhost`, spunta «Web API») | **Impostazioni → Credenziali Spotify** (oppure Musica → Playlist → Importa) |
 | Ordini Amazon da Gmail | il tuo indirizzo Gmail e una **password per le app** (non la password di Google): [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords), richiede la verifica in due passaggi | **Impostazioni → Ordini da Gmail** (solo Windows). La password è cifrata con DPAPI, legata al tuo utente Windows |
 | Sincronizzazione PC ↔ telefono | PC e telefono sulla stessa rete Wi-Fi | **Impostazioni → Sincronizzazione**: sul PC compare un codice, sul telefono lo inserisci. Porte: TCP 47800, UDP 47801 |
+| Sincronizzazione cloud | un progetto [Supabase](https://supabase.com) gratuito: esegui `supabase/migrations/*.sql` nel suo editor SQL, crea il tuo utente in Authentication e disattiva le registrazioni | **Impostazioni → Sincronizzazione**: indirizzo del progetto, chiave *publishable*, email e password. Il primo dispositivo crea la chiave di cifratura, gli altri si associano con un codice |
 
 Variabili d'ambiente opzionali (solo Windows, per l'API locale): `ARM_AGENT_PORT` (porta, predefinita 47810) e `ARM_AGENT_FILE` (percorso del file JSON con porta e chiave, predefinito `%LOCALAPPDATA%\ARM\arm-api.json`). L'API ascolta solo su `127.0.0.1` e ogni richiesta deve portare l'header `X-Arm-Key`.
 

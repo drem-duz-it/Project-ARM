@@ -44,7 +44,7 @@ public class SettingsPage : SheetPage
 
         // ---- Collegamenti ----
         var links = new VerticalStackLayout { Spacing = 8 };
-        links.Add(Ui.Button(Loc.T("Sincronizzazione"), () => Navigation.PushModalAsync(new SyncPage(_sync)), Ui.Icons.Sync, ghost: true));
+        links.Add(Ui.Button(Loc.T("Sincronizzazione"), () => Navigation.PushModalAsync(new CloudSyncPage(_sync)), Ui.Icons.Sync, ghost: true));
         if (GmailOrdiniService.Supportato)
             links.Add(Ui.Button(Loc.T("Ordini da Gmail"), () => Navigation.PushModalAsync(new GmailPage(null)), Ui.Icons.Mail, ghost: true));
         links.Add(Ui.Button(Loc.T("Credenziali Spotify"), () =>

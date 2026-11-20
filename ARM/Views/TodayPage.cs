@@ -231,7 +231,7 @@ public class TodayPage : ContentView
         return g;
     }
 
-    private void OpenSync() => Open(new SyncPage(_sync));
+    private void OpenSync() => Open(SyncPages.For(_sync));
 
     // Azioni rapide: pulsanti 44 col bordo forte
     private View QuickActions()
@@ -709,14 +709,15 @@ public class TodayPage : ContentView
         Thickness gap = new(0, 4, 24, 4);
         var stato = new HorizontalStackLayout { Spacing = 8, Margin = gap };
         stato.Add(Ui.Dot(Ui.C(_sync.IsPaired ? "AccentColor" : "BorderStrongColor")));
-        stato.Add(new Label { Text = _sync.IsPaired ? Loc.T("Sincronizzazione Wi-Fi attiva") : Loc.T("Sincronizzazione non attiva"), FontSize = 13, FontFamily = Ui.FontSemi, TextColor = Ui.C("TextColor"), VerticalOptions = LayoutOptions.Center });
+        stato.Add(new Label { Text = _sync.IsCloud ? Loc.T("Sincronizzazione cloud attiva") : _sync.IsPaired ? Loc.T("Sincronizzazione Wi-Fi attiva") : Loc.T("Sincronizzazione non attiva"), FontSize = 13, FontFamily = Ui.FontSemi, TextColor = Ui.C("TextColor"), VerticalOptions = LayoutOptions.Center });
         f.Add(stato);
 
         if (_sync.IsPaired)
         {
             var dev = new HorizontalStackLayout { Spacing = 16, Margin = gap };
             dev.Add(Dispositivo(_sync.IsHost ? Ui.Icons.Pc : Ui.Icons.Phone, _sync.DeviceName));
-            if (_sync.IsHost) foreach (var d in _sync.Devices) dev.Add(Dispositivo(Ui.Icons.Phone, d.Name));
+            if (_sync.IsCloud) dev.Add(Dispositivo(Ui.Icons.Sync, _sync.PeerName));
+            else if (_sync.IsHost) foreach (var d in _sync.Devices) dev.Add(Dispositivo(Ui.Icons.Phone, d.Name));
             else dev.Add(Dispositivo(Ui.Icons.Pc, _sync.PeerName));
             f.Add(dev);
             if (_sync.LastSync is DateTime t)
