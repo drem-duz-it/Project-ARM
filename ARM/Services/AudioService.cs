@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ARM.Services;
 
-public class AudioService
+public partial class AudioService
 {
     // Aggiungiamo un riferimento a YouTubeService per i brani non scaricati
     public YouTubeService YtResolver { get; set; }
@@ -21,6 +21,7 @@ public class AudioService
             if (_player != null) { _player.MediaEnded -= OnMediaEnded; _player.StateChanged -= OnStateChanged; }
             _player = value;
             if (_player != null) { _player.MediaEnded += OnMediaEnded; _player.StateChanged += OnStateChanged; }
+            if (_player != null) AvviaControlloUscitaAudio();
         }
     }
 
@@ -32,8 +33,38 @@ public class AudioService
     public event Action<bool> PlaybackChanged;
     public event Action<string> PlaybackError;      // es. brano non scaricato
 
-    private void OnStateChanged(object sender, CommunityToolkit.Maui.Core.MediaStateChangedEventArgs e) =>
+    private void OnStateChanged(object sender, CommunityToolkit.Maui.Core.MediaStateChangedEventArgs e)
+    {
+        // Cuffie o auto appena collegate che fanno ripartire la musica da sole: la rimettiamo in pausa
+        if (e.NewState == CommunityToolkit.Maui.Core.MediaElementState.Playing && RipartenzaAutomatica())
+        {
+            MainThread.BeginInvokeOnMainThread(() => Player?.Pause());
+            return;
+        }
         MainThread.BeginInvokeOnMainThread(() => PlaybackChanged?.Invoke(IsPlaying));
+    }
+
+    // --- USCITA AUDIO (cuffie, Bluetooth) ---
+    // Quando l'uscita sparisce la musica va in pausa (non deve passare all'altoparlante).
+    // Quando un dispositivo si collega, per qualche secondo un "play" che non viene dall'app viene ignorato:
+    // molte cuffie e auto lo mandano da sole alla connessione.
+    private static readonly TimeSpan FinestraCollegamento = TimeSpan.FromSeconds(3);
+    private DateTime _ultimoCollegamento = DateTime.MinValue;
+    private DateTime _ultimaRichiestaApp = DateTime.MinValue;
+
+    // Implementato in Platforms/Android e Platforms/Windows
+    partial void AvviaControlloUscitaAudio();
+
+    internal void UscitaAudioPersa() =>
+        MainThread.BeginInvokeOnMainThread(() => { if (IsPlaying) Player?.Pause(); });
+
+    internal void UscitaAudioCollegata() => _ultimoCollegamento = DateTime.UtcNow;
+
+    private bool RipartenzaAutomatica()
+    {
+        var ora = DateTime.UtcNow;
+        return ora - _ultimoCollegamento < FinestraCollegamento && ora - _ultimaRichiestaApp > FinestraCollegamento;
+    }
 
     // Chiamato quando l'app torna in primo piano: ridisegna i pulsanti con lo stato attuale
     public void RefreshPlaybackState() => PlaybackChanged?.Invoke(IsPlaying);
@@ -48,6 +79,7 @@ public class AudioService
         if (string.IsNullOrWhiteSpace(audioUrl)) return;
 
         CurrentSong = song;
+        _ultimaRichiestaApp = DateTime.UtcNow;
         OnSongChanged?.Invoke(song);
 
         if (Player != null)
@@ -73,7 +105,11 @@ public class AudioService
     }
 
     public void Pause() => Player?.Pause();
-    public void Resume() => Player?.Play();
+    public void Resume()
+    {
+        _ultimaRichiestaApp = DateTime.UtcNow;
+        Player?.Play();
+    }
 
     public void TogglePlayPause()
     {
